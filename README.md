@@ -1,4 +1,4 @@
-# Vecta Motion Pro
+# Vector Motion Pro
 
 A single-file vector drawing and keyframe-animation studio for the browser. Open
 `vecta-motion-pro.html` directly — there is no build step, package install, or server
