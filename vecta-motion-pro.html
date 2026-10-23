@@ -1,0 +1,4679 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vecta Motion Pro — Vector & Animation Studio</title>
+<style>
+:root{
+  --bg:#0b0d12;--panel:#141821;--panel2:#1b202b;--panel3:#222837;--line:#2b3242;
+  --text:#eef1f8;--muted:#96a0b6;--accent:#8b7bff;--accent2:#b9aaff;--good:#5fd4a4;
+  --warn:#ffb454;--danger:#ff6b81;--teal:#43d9c0;--radius:8px;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%;margin:0;overflow:hidden;background:var(--bg);color:var(--text);
+  font:13px/1.45 Inter,system-ui,"Segoe UI",Arial,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:1px solid #394152;background:#252b38;border-radius:6px;padding:6px 10px}
+button:hover{background:#303748;border-color:#5f6c8c}
+button:disabled{opacity:.45;cursor:not-allowed}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button.primary:hover{background:#7a68ff}
+button.ghost{background:transparent;border-color:transparent}
+button.ghost:hover{background:#262c3a}
+button.danger{background:#3a2029;border-color:#6d3040;color:#ffc2cd}
+button.danger:hover{background:#4a2631}
+input,select,textarea{background:#0f1219;border:1px solid #394152;border-radius:6px;padding:6px 8px;min-width:0}
+textarea{resize:vertical;line-height:1.4}
+input[type=color]{padding:2px;height:32px;cursor:pointer}
+input[type=range]{padding:0;accent-color:var(--accent)}
+input[type=checkbox]{accent-color:var(--accent);width:15px;height:15px;cursor:pointer}
+input:focus,select:focus,textarea:focus{outline:2px solid #6d5bd0;outline-offset:0}
+h1,h2,h3,h4{margin:0}
+.app{display:flex;flex-direction:column;height:100%}
+/* top */
+.topbar{height:50px;flex:0 0 auto;display:flex;align-items:center;gap:7px;padding:0 12px;background:#0f1219;border-bottom:1px solid var(--line)}
+.logo{font-weight:900;letter-spacing:1.2px;font-size:15px;white-space:nowrap}
+.logo span{color:var(--accent2)}
+.badge{font-size:9px;letter-spacing:1px;color:#d8ccff;background:#2b2348;border:1px solid #4b3d7d;border-radius:20px;padding:2px 7px;white-space:nowrap}
+.docname{width:180px;background:transparent;border-color:transparent}
+.docname:hover,.docname:focus{border-color:var(--line);background:#0d1016}
+.grow{flex:1}
+.status{font-size:11px;color:var(--good);white-space:nowrap}
+.status.dirty{color:var(--warn)}
+.iconbtn{padding:5px 8px}
+/* notice */
+.notice{flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:7px 12px;font-size:11.5px;
+  background:linear-gradient(90deg,#2a2140,#202838);border-bottom:1px solid #3a3357;color:#ddd6ff}
+.notice strong{color:#fff}
+.notice .x{margin-left:auto;background:transparent;border:0;padding:2px 6px;color:#b9b2d6}
+/* menubar */
+.menubar{height:37px;flex:0 0 auto;display:flex;align-items:center;gap:2px;padding:0 8px;
+  background:#161a23;border-bottom:1px solid var(--line);overflow-x:auto}
+.menubar button{background:transparent;border-color:transparent;color:#c3cadd;padding:5px 8px;white-space:nowrap}
+.menubar button:hover{background:#252b38}
+.menubar button.active{background:#30294d;color:#fff;border-color:#584a8f}
+.menubar .sepv{width:1px;height:18px;background:var(--line);margin:0 5px;flex:0 0 auto}
+/* workspace */
+.workspace{flex:1;min-height:0;display:grid;grid-template-columns:48px minmax(0,1fr) 312px}
+.toolbar{background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;
+  align-items:center;gap:5px;padding:8px 4px;overflow-y:auto}
+.tool{width:36px;height:35px;padding:0;display:grid;place-items:center;font-size:16px;background:#202633}
+.tool.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.toolsep{height:1px;width:24px;background:var(--line);margin:4px 0;flex:0 0 auto}
+/* center */
+.center{min-width:0;min-height:0;display:flex;flex-direction:column;background:#0e1117}
+.canvasbar{height:36px;flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:0 12px;
+  background:#151922;border-bottom:1px solid var(--line);font-size:11px;color:var(--muted);overflow:hidden}
+.canvasbar strong{color:#e8ecf6;font-weight:600}
+.canvasbar .sep{color:#3b4356}
+.canvasbar label{display:flex;align-items:center;gap:6px;white-space:nowrap}
+.canvasbar select{padding:3px 6px;font-size:11px}
+.canvasbar input[type=color]{width:28px;height:24px;padding:1px;border:0;background:transparent}
+.chip{font-size:9.5px;letter-spacing:.5px;text-transform:uppercase;border:1px solid #3e4760;background:#222838;
+  color:#aab4c9;border-radius:20px;padding:2px 7px;white-space:nowrap}
+.stage{position:relative;flex:1;min-height:0;overflow:auto;display:flex;padding:24px;
+  background-color:#0c0f15;
+  background-image:radial-gradient(#232a38 1px,transparent 1px);background-size:20px 20px;touch-action:none}
+.artboard{position:relative;flex:0 0 auto;margin:auto;background:#fff;box-shadow:0 16px 60px #000a;border-radius:2px;overflow:hidden}
+.artboard svg{display:block;width:100%;height:100%;touch-action:none;user-select:none}
+.empty-hint{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;color:#8f98ad;font-size:12px;text-align:center}
+.empty-hint div{background:#0f131bd9;border:1px solid #2c3445;border-radius:10px;padding:14px 18px;max-width:340px}
+.empty-hint b{color:#fff;font-weight:600}
+.empty-hint button{pointer-events:auto;margin-top:10px}
+.statusbar{height:24px;flex:0 0 auto;display:flex;align-items:center;gap:14px;padding:0 12px;
+  background:#11151d;border-top:1px solid var(--line);font-size:10.5px;color:#8e97ab;overflow:hidden;white-space:nowrap}
+.statusbar .grow{flex:1}
+/* inspector */
+.inspector{background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+.tabs{display:flex;gap:3px;padding:5px;border-bottom:1px solid var(--line);flex:0 0 auto}
+.tab{flex:1;padding:6px 2px;background:transparent;border:0;color:var(--muted);border-radius:5px;font-size:12px}
+.tab:hover{background:#222836}
+.tab.active{background:#30294d;color:#fff}
+.panel{display:none;overflow:auto;flex:1;min-height:0}
+.panel.active{display:block}
+.paneltitle{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 12px 8px;
+  font-weight:700;font-size:12px;letter-spacing:.3px}
+.paneltitle small{font-size:9px;color:#8b94a9;font-weight:500;letter-spacing:.4px;text-transform:uppercase}
+.section{padding:10px 12px;border-bottom:1px solid var(--line)}
+.section h4{font-size:9.5px;letter-spacing:1px;text-transform:uppercase;color:#9aa4ba;margin:0 0 9px;display:flex;align-items:center;justify-content:space-between;gap:6px}
+.section h4 .right{font-size:9px;letter-spacing:0;text-transform:none;color:#7f89a0;font-weight:500}
+.field{display:flex;flex-direction:column;gap:3px;margin:0 0 8px}
+.field label{font-size:10.5px;color:var(--muted)}
+.field input,.field select,.field textarea{width:100%}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.row{display:flex;gap:6px;align-items:center}
+.row > *{flex:1}
+.row.tight > *{flex:0 0 auto}
+.inline{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--muted)}
+.inline input[type=checkbox]{flex:0 0 auto}
+.hint{font-size:10.8px;color:#8b94a9;line-height:1.55;margin:8px 0 0}
+.hint b{color:#cbd3e4}
+.btnrow{display:flex;gap:6px;flex-wrap:wrap}
+.btnrow button{flex:1;min-width:78px}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px;font-size:11px;color:var(--muted)}
+.toggle-row .inline{flex:0 0 auto}
+.switch{position:relative;display:inline-flex;width:34px;height:19px;flex:0 0 auto}
+.switch input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}
+.switch i{position:absolute;inset:0;border-radius:20px;background:#303748;border:1px solid #454f64;transition:.15s}
+.switch i::after{content:"";position:absolute;top:2px;left:2px;width:13px;height:13px;border-radius:50%;background:#9aa4ba;transition:.15s}
+.switch input:checked + i{background:#4b3fa0;border-color:#7d6bff}
+.switch input:checked + i::after{left:17px;background:#fff}
+.align-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:8px}
+.align-grid button{padding:5px 2px;font-size:11px}
+.align-grid button span{font-size:9px;display:block;color:#8b94a9}
+/* layers */
+.layer{display:flex;align-items:center;gap:6px;padding:5px 6px;border-radius:6px;cursor:pointer;border:1px solid transparent}
+.layer:hover{background:#222836}
+.layer.selected{background:#30294d;border-color:#584a8f}
+.layer.dragging{opacity:.45}
+.layer .eye,.layer .lock{background:transparent;border:0;padding:1px 3px;font-size:12px;color:#9aa4ba;flex:0 0 auto}
+.layer .eye:hover,.layer .lock:hover{background:#3a4152;color:#fff}
+.layer .type{width:18px;height:18px;flex:0 0 auto;border-radius:4px;display:grid;place-items:center;font-size:9px;
+  color:#fff;background:#39415a;border:1px solid #4b5570;overflow:hidden;position:relative}
+.layer .type .swatch{position:absolute;inset:0;opacity:.9}
+.layer .name{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:12px}
+.layer .meta{font-size:9px;color:#8a94aa;flex:0 0 auto}
+.layer.locked .name{color:#8b94a9}
+/* motion / keyframes */
+.kf-row{display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px dashed #262d3c}
+.kf-row button{flex:0 0 auto;padding:3px 7px;font-size:11px}
+.kf-row select{flex:1;padding:4px 5px;font-size:11px}
+.kf-frame{font-variant-numeric:tabular-nums;color:#cfd6e6;min-width:64px}
+/* timeline */
+.timeline{height:206px;flex:0 0 auto;display:flex;flex-direction:column;background:#151922;border-top:1px solid var(--line)}
+.tl-head{height:38px;flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:0 10px;border-bottom:1px solid var(--line);overflow-x:auto;overflow-y:hidden}
+.tl-head strong{font-size:12px;white-space:nowrap}
+.tl-head label{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;white-space:nowrap}
+.tl-head input[type=number]{width:56px;padding:3px 5px}
+.tl-head select{padding:3px 5px}
+.tl-head input[type=range]{width:78px}
+.tl-head .sepv{width:1px;height:18px;background:var(--line);margin:0 4px;flex:0 0 auto}
+.tl-body{flex:1;min-height:0;display:flex;overflow:hidden}
+.track-names{width:174px;flex:0 0 auto;overflow:hidden;border-right:1px solid var(--line);background:#12161e}
+.track-head,.track-name{height:28px;display:flex;align-items:center;padding:0 9px;font-size:10.5px;color:#aeb8cc;
+  border-bottom:1px solid #232a37;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.track-head{height:27px;background:#1a1f2a;color:#8f99af;font-size:10px;text-transform:uppercase;letter-spacing:.7px;position:sticky;top:0;z-index:2}
+.track-name{display:flex;justify-content:space-between;gap:6px;cursor:pointer}
+.track-name span{overflow:hidden;text-overflow:ellipsis}
+.track-name em{font-style:normal;font-size:9px;color:#7f89a0;flex:0 0 auto}
+.track-name.selected{color:#fff;background:#2a2544}
+.track-name.selected em{color:#c2b8ff}
+.tracks-scroll{flex:1;min-width:0;overflow:auto;position:relative}
+.timeline-canvas{position:relative;min-height:100%}
+.ruler{position:sticky;top:0;z-index:3;height:27px;background:#1a1f2a;border-bottom:1px solid var(--line);
+  background-image:linear-gradient(to right,#2b3344 1px,transparent 1px);background-size:8px 100%;cursor:ew-resize}
+.ruler-tick{position:absolute;top:0;height:27px;border-left:1px solid #4a5468;padding:5px 0 0 4px;
+  font-size:9px;color:#9aa5bb;white-space:nowrap;pointer-events:none}
+.ruler-sub{position:absolute;bottom:0;height:6px;border-left:1px solid #333c50;pointer-events:none}
+.track-row{height:28px;border-bottom:1px solid #232a37;position:relative;cursor:default;
+  background-image:linear-gradient(to right,#252c3a 1px,transparent 1px);background-size:80px 100%}
+.track-row:nth-child(even){background-color:#181d26}
+.track-row.selected{background-color:#211c39}
+.diamond{position:absolute;top:8px;width:11px;height:11px;padding:0;transform:rotate(45deg);
+  background:#b4a2ff;border:1px solid #e6ddff;border-radius:2px;box-shadow:0 0 0 1px #0006;cursor:grab;z-index:2}
+.diamond:hover{background:#fff}
+.diamond.selected{background:#ffd166;border-color:#fff3c4}
+.playhead{position:absolute;top:0;width:3px;background:#ff5c8a;z-index:4;cursor:ew-resize}
+.playhead::before{content:"";position:absolute;top:0;left:-5px;border-left:6px solid transparent;
+  border-right:6px solid transparent;border-top:9px solid #ff5c8a;cursor:ew-resize}
+/* modal */
+.modal-backdrop{position:fixed;inset:0;background:#05070bcc;backdrop-filter:blur(3px);display:none;
+  align-items:center;justify-content:center;z-index:50;padding:18px}
+.modal-backdrop.open{display:flex}
+.modal-card{width:min(980px,100%);max-height:90vh;display:flex;flex-direction:column;background:#141821;
+  border:1px solid #333c4e;border-radius:12px;box-shadow:0 30px 100px #000c;overflow:hidden}
+.modal-head{display:flex;align-items:center;gap:10px;padding:13px 16px;border-bottom:1px solid var(--line);flex:0 0 auto}
+.modal-head h3{font-size:15px}
+.modal-head .x{margin-left:auto;background:transparent;border:0;font-size:20px;line-height:1;padding:0 4px;color:#aeb7cb}
+.modal-body{padding:16px;overflow:auto;min-height:0}
+.modal-foot{display:flex;gap:8px;justify-content:flex-end;padding:12px 16px;border-top:1px solid var(--line);flex:0 0 auto}
+/* docs */
+.docs-layout{display:grid;grid-template-columns:198px minmax(0,1fr);gap:16px;min-height:380px}
+.docs-nav{display:flex;flex-direction:column;gap:4px}
+.docs-nav button{text-align:left;background:transparent;border-color:transparent;color:#aeb7cb;padding:8px 10px}
+.docs-nav button.active{background:#30294d;color:#fff}
+.docs-nav button:hover{background:#222836}
+.doc-section{display:none;line-height:1.65}
+.doc-section.active{display:block}
+.doc-section h3{font-size:16px;margin:0 0 8px}
+.doc-section h4{font-size:12px;margin:18px 0 6px;color:#cfd6e6;text-transform:uppercase;letter-spacing:.7px}
+.doc-section p{margin:0 0 10px;color:#c4cbda}
+.doc-section ul,.doc-section ol{margin:0 0 12px;padding-left:20px;color:#c4cbda}
+.doc-section li{margin:4px 0}
+.doc-section code{background:#0f1219;border:1px solid #2b3242;border-radius:4px;padding:1px 5px;font-size:11.5px}
+.doc-section table{border-collapse:collapse;width:100%;margin:8px 0 14px;font-size:12px}
+.doc-section th,.doc-section td{border:1px solid #2b3242;padding:6px 8px;text-align:left}
+.doc-section th{background:#1a1f2a;color:#cfd6e6}
+.note{background:#2a2140;border:1px solid #463a73;border-radius:8px;padding:10px 12px;color:#ded7ff;margin:10px 0}
+.warnbox{background:#352a17;border:1px solid #6a5126;border-radius:8px;padding:10px 12px;color:#ffe0b0;margin:10px 0}
+/* export */
+.exp-row{display:grid;grid-template-columns:142px minmax(0,1fr);gap:10px;align-items:center;margin:0 0 10px}
+.exp-row label{color:var(--muted);font-size:12px}
+.exp-row input[type=number]{width:86px}
+.progress{height:10px;background:#0d1016;border:1px solid #2b3242;border-radius:20px;overflow:hidden;margin:12px 0 6px}
+.progress > div{height:100%;width:0;background:linear-gradient(90deg,#7a68ff,#b9aaff);transition:width .15s}
+/* toast */
+.toast{position:fixed;left:50%;bottom:238px;transform:translate(-50%,20px);background:#1d2331;
+  border:1px solid #3b4559;border-radius:8px;padding:9px 14px;font-size:12px;color:#e8ecf6;
+  opacity:0;pointer-events:none;transition:.2s;z-index:99;max-width:80vw;text-align:center;box-shadow:0 12px 40px #0009}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+/* command palette */
+.palette-backdrop{position:fixed;inset:0;background:#05070bd0;backdrop-filter:blur(4px);display:none;
+  align-items:flex-start;justify-content:center;padding:12vh 18px 18px;z-index:60}
+.palette-backdrop.open{display:flex}
+.palette{width:min(620px,100%);background:#141821;border:1px solid #3a4459;border-radius:12px;
+  box-shadow:0 30px 100px #000d;overflow:hidden}
+.palette input{width:100%;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:14px 16px;
+  font-size:14px;background:#171c26}
+.palette input:focus{outline:none}
+.palette-list{max-height:52vh;overflow:auto;padding:6px}
+.palette-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:transparent;
+  border:1px solid transparent;border-radius:7px;padding:8px 10px;color:#d5dceb}
+.palette-item:hover,.palette-item.active{background:#30294d;border-color:#4d4083}
+.palette-item .kbd{margin-left:auto;font-size:10px;color:#9aa4ba;border:1px solid #3a4459;border-radius:4px;
+  padding:1px 5px;background:#0f1219;white-space:nowrap}
+.palette-item small{color:#8b94a9;font-size:10.5px}
+.palette-foot{padding:7px 12px;border-top:1px solid var(--line);font-size:10.5px;color:#7f89a0}
+/* preview */
+.preview-shell{width:min(1200px,100%);height:100%;max-height:90vh;display:flex;flex-direction:column;
+  background:#0a0c11;border:1px solid #333c4e;border-radius:12px;overflow:hidden;box-shadow:0 30px 100px #000d}
+.preview-stage{flex:1;min-height:0;display:grid;place-items:center;padding:18px;
+  background:repeating-conic-gradient(#151a23 0 25%,#10141b 0 50%) 50%/34px 34px}
+.preview-stage svg{max-width:100%;max-height:100%;width:auto;height:auto;background:#fff;box-shadow:0 12px 60px #000b}
+.preview-bar{display:flex;align-items:center;gap:10px;padding:9px 12px;border-top:1px solid var(--line);background:#141821;flex-wrap:wrap}
+.preview-bar .grow{flex:1}
+/* svg interaction */
+#svg:not([data-tool="select"]):not([data-tool="eraser"]) #content > g{pointer-events:none}
+#svg[data-tool="hand"]{cursor:grab}
+#svg[data-tool="hand"]:active{cursor:grabbing}
+#svg[data-tool="eraser"] #content > g{cursor:crosshair}
+/* scrollbars */
+*{scrollbar-width:thin;scrollbar-color:#394152 transparent}
+*::-webkit-scrollbar{width:10px;height:10px}
+*::-webkit-scrollbar-thumb{background:#394152;border-radius:8px;border:2px solid #0e1117}
+*::-webkit-scrollbar-track{background:transparent}
+@media(max-width:1080px){
+  .workspace{grid-template-columns:46px minmax(0,1fr) 286px}
+  .topbar .docname{width:130px}
+}
+@media(max-width:980px){
+  .workspace{grid-template-columns:46px minmax(0,1fr)}
+  .inspector{display:none}
+  .topbar .docname{width:110px}
+  .timeline{height:176px}
+  .topbar #previewBtn{display:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ================= TOP BAR ================= -->
+  <header class="topbar">
+    <div class="logo">VECTA<span>MOTION</span></div>
+    <span class="badge">PRO</span>
+    <input id="docName" class="docname" value="Untitled Project" aria-label="Project name">
+    <span class="grow"></span>
+    <span id="saveStatus" class="status" title="Autosaved to this browser">● Saved</span>
+    <button id="undoBtn" class="iconbtn" title="Undo (Ctrl+Z)">↶</button>
+    <button id="redoBtn" class="iconbtn" title="Redo (Ctrl+Y)">↷</button>
+    <button id="saveBtn" title="Save project JSON (Ctrl+S)">Save</button>
+    <button id="openBtn" title="Open project JSON">Open</button>
+    <button id="importBtn">Import</button>
+    <button id="docsBtnTop">Docs</button>
+    <button id="previewBtn" title="Preview animation">▶ Preview</button>
+    <button id="exportBtn" class="primary">Export</button>
+  </header>
+
+  <!-- ================= NOTICE ================= -->
+  <div class="notice" id="notice">
+    <span>⚠ <strong>Experimental studio.</strong> New in Pro: multi-select, gradients, effects, snapping, onion skin,
+      motion tools, sprite-sheet export, autosave and a command palette (<strong>Ctrl+K</strong>).</span>
+    <button class="x" id="noticeClose" title="Dismiss">✕</button>
+  </div>
+
+  <!-- ================= MENU ================= -->
+  <nav class="menubar">
+    <button id="newBtn">New</button>
+    <button id="addRectBtn">Rectangle</button>
+    <button id="addEllipseBtn">Ellipse</button>
+    <button id="addLineBtn">Line</button>
+    <button id="addStarBtn">Star</button>
+    <button id="addPolyBtn">Polygon</button>
+    <button id="addTextBtn">Text</button>
+    <span class="sepv"></span>
+    <button id="duplicateBtn">Duplicate</button>
+    <button id="deleteBtn">Delete</button>
+    <span class="sepv"></span>
+    <button id="zoomOut" title="Zoom out">−</button>
+    <span id="zoomLabel" style="font-size:11px;color:#b5bdd0;min-width:38px;text-align:center">100%</span>
+    <button id="zoomIn" title="Zoom in">+</button>
+    <button id="fitBtn" title="Fit artboard (0)">Fit</button>
+    <span class="sepv"></span>
+    <button id="gridBtn" class="toggle" title="Toggle grid (G)">Grid</button>
+    <button id="snapBtn" class="toggle" title="Toggle snapping">Snap</button>
+    <button id="onionBtn" class="toggle" title="Toggle onion skin (O)">Onion</button>
+    <span class="grow"></span>
+    <button id="playTopBtn">▶ Play</button>
+  </nav>
+
+  <!-- ================= WORKSPACE ================= -->
+  <div class="workspace">
+
+    <!-- tools -->
+    <aside class="toolbar" aria-label="Tools">
+      <button class="tool active" data-tool="select" title="Select / Move (V)">↖</button>
+      <button class="tool" data-tool="rect" title="Rectangle (R)">▭</button>
+      <button class="tool" data-tool="ellipse" title="Ellipse (E)">◯</button>
+      <button class="tool" data-tool="line" title="Line (L)">╱</button>
+      <button class="tool" data-tool="star" title="Star (S)">★</button>
+      <button class="tool" data-tool="polygon" title="Polygon (P)">⬠</button>
+      <button class="tool" data-tool="text" title="Text (T)">T</button>
+      <button class="tool" data-tool="brush" title="Brush (B)">✎</button>
+      <button class="tool" data-tool="eraser" title="Delete object (X)">⌫</button>
+      <button class="tool" data-tool="hand" title="Pan (H)">✋</button>
+      <div class="toolsep"></div>
+      <button class="tool" id="toolDelete" title="Delete selected (Del)">×</button>
+    </aside>
+
+    <!-- canvas -->
+    <main class="center">
+      <div class="canvasbar">
+        <strong>Artboard</strong>
+        <span class="sep">·</span>
+        <span id="selectedName">Nothing selected</span>
+        <span id="selectionBadge" class="chip" hidden>0 selected</span>
+        <span class="grow"></span>
+        <label>Preset
+          <select id="canvasPreset" title="Canvas preset">
+            <option value="1920x1080">HD 1920×1080</option>
+            <option value="1280x720">HD 1280×720</option>
+            <option value="1080x1080">Square 1080</option>
+            <option value="1080x1920">Story 1080×1920</option>
+            <option value="2560x1440">QHD 2560×1440</option>
+            <option value="3840x2160">4K 3840×2160</option>
+            <option value="custom">Custom</option>
+          </select>
+        </label>
+        <label>BG
+          <input type="color" id="bgColorHead" value="#ffffff" title="Artboard background">
+        </label>
+      </div>
+
+      <div class="stage" id="stage">
+        <div class="artboard" id="artboard">
+          <svg id="svg" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg" data-tool="select">
+            <defs>
+              <pattern id="gridPattern" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#000" stroke-opacity=".10" stroke-width="1"></path>
+              </pattern>
+            </defs>
+            <rect id="bgRect" width="1920" height="1080" fill="#ffffff"></rect>
+            <rect id="gridRect" width="1920" height="1080" fill="url(#gridPattern)" display="none" pointer-events="none"></rect>
+            <g id="onion" pointer-events="none"></g>
+            <g id="content"></g>
+            <g id="overlay"></g>
+          </svg>
+        </div>
+        <div class="empty-hint" id="emptyHint">
+          <div><b>Draw something</b><br>Pick a tool or press <b>R</b> / <b>E</b> / <b>★</b> / <b>T</b>. Select with <b>V</b>.<br>
+          Then animate on the timeline below.
+          <br><button id="sampleHintBtn">Load sample scene</button></div>
+        </div>
+      </div>
+
+      <div class="statusbar">
+        <span id="objectCount">0 objects</span>
+        <span id="pointerReadout">Ready</span>
+        <span id="dimensions">1920 × 1080 px</span>
+        <span class="grow"></span>
+        <span id="frameStatus">Frame 0</span>
+        <span id="zoomStatus">100%</span>
+        <span>Vecta Motion Pro</span>
+      </div>
+    </main>
+
+    <!-- inspector -->
+    <aside class="inspector">
+      <div class="tabs">
+        <button class="tab active" data-panel="design">Design</button>
+        <button class="tab" data-panel="layers">Layers</button>
+        <button class="tab" data-panel="motion">Motion</button>
+        <button class="tab" data-panel="guide">Guide</button>
+      </div>
+
+      <!-- DESIGN -->
+      <div class="panel active" id="panel-design">
+        <div class="paneltitle">Properties <small>Object / canvas</small></div>
+
+        <div class="section" id="canvasProps">
+          <h4>Canvas</h4>
+          <div class="grid2">
+            <div class="field"><label>Width (px)</label><input id="canvasWInput" type="number" min="64" max="8000" step="1"></div>
+            <div class="field"><label>Height (px)</label><input id="canvasHInput" type="number" min="64" max="8000" step="1"></div>
+          </div>
+          <div class="field"><label>Background</label><input id="bgColor2" type="color" value="#ffffff"></div>
+          <p class="hint">Nothing selected. Choose a tool, or click an object on the canvas. Tip: press <b>V</b> to select,
+            <b>Shift</b>-click for multi-select.</p>
+        </div>
+
+        <div id="multiProps" hidden>
+          <div class="section">
+            <h4>Multiple selection <span class="right" id="multiCount">0 objects</span></h4>
+            <div class="align-grid" id="alignGrid">
+              <button data-align="left" title="Align left">⇤<span>Left</span></button>
+              <button data-align="hcenter" title="Align horizontal centers">↔<span>Center</span></button>
+              <button data-align="right" title="Align right">⇥<span>Right</span></button>
+              <button data-align="top" title="Align top">⤒<span>Top</span></button>
+              <button data-align="vcenter" title="Align vertical centers">↕<span>Middle</span></button>
+              <button data-align="bottom" title="Align bottom">⤓<span>Bottom</span></button>
+            </div>
+            <div class="btnrow" style="margin-bottom:8px">
+              <button data-distribute="h">Distribute H</button>
+              <button data-distribute="v">Distribute V</button>
+            </div>
+            <div class="btnrow">
+              <button id="multiGroupFront">To front</button>
+              <button id="multiGroupBack">To back</button>
+            </div>
+          </div>
+          <div class="section">
+            <h4>Common actions</h4>
+            <div class="btnrow">
+              <button id="multiDupBtn">Duplicate</button>
+              <button id="multiDelBtn" class="danger">Delete</button>
+            </div>
+            <p class="hint">Move, nudge and resize the selection together. Transform fields appear when a single
+              object is selected.</p>
+          </div>
+        </div>
+
+        <div id="objProps" hidden>
+          <div class="section">
+            <h4>Identity</h4>
+            <div class="field"><label>Name</label><input id="propName" type="text"></div>
+            <div class="row" style="gap:14px">
+              <label class="inline"><input type="checkbox" id="propVisible"> Visible</label>
+              <label class="inline"><input type="checkbox" id="propLocked"> Locked</label>
+            </div>
+          </div>
+
+          <div class="section">
+            <h4>Transform</h4>
+            <div class="grid2">
+              <div class="field"><label>X</label><input id="propX" type="number" step="1"></div>
+              <div class="field"><label>Y</label><input id="propY" type="number" step="1"></div>
+              <div class="field"><label>Width</label><input id="propW" type="number" step="1" min="1"></div>
+              <div class="field"><label>Height</label><input id="propH" type="number" step="1" min="1"></div>
+              <div class="field"><label>Rotation°</label><input id="propRot" type="number" step="1"></div>
+              <div class="field"><label>Opacity %</label><input id="propOpacity" type="range" min="0" max="100" value="100"></div>
+              <div class="field"><label>Scale X</label><input id="propSX" type="number" step="0.05" min="0.01"></div>
+              <div class="field"><label>Scale Y</label><input id="propSY" type="number" step="0.05" min="0.01"></div>
+            </div>
+            <div style="font-size:10.5px;color:#8b94a9;margin-top:-2px" id="opacityVal">100% opacity</div>
+          </div>
+
+          <div class="section">
+            <h4>Fill &amp; stroke</h4>
+            <div class="field"><label>Fill type</label>
+              <select id="propFillMode">
+                <option value="solid">Solid colour</option>
+                <option value="gradient">Linear gradient</option>
+                <option value="none">None / transparent</option>
+              </select>
+            </div>
+            <div class="field" id="solidFillField"><label>Fill</label><input id="propFill" type="color" value="#8b7bff"></div>
+            <div id="gradientFields" hidden>
+              <div class="grid2">
+                <div class="field"><label>From</label><input id="propGradFrom" type="color" value="#8b7bff"></div>
+                <div class="field"><label>To</label><input id="propGradTo" type="color" value="#43d9c0"></div>
+              </div>
+              <div class="field"><label>Angle°</label><input id="propGradAngle" type="number" step="5"></div>
+            </div>
+            <div class="grid2">
+              <div class="field"><label>Stroke</label><input id="propStroke" type="color" value="#2b2545"></div>
+              <div class="field"><label>Stroke px</label><input id="propSW" type="number" min="0" max="200" step="1"></div>
+            </div>
+            <div class="grid2">
+              <div class="field"><label>Dash</label>
+                <select id="propDash">
+                  <option value="">Solid</option>
+                  <option value="4 4">Dashed</option>
+                  <option value="2 5">Dotted</option>
+                  <option value="14 6">Long dash</option>
+                  <option value="1 6">Fine dots</option>
+                </select>
+              </div>
+              <div class="field" id="radiusField"><label>Corner radius</label><input id="propRadius" type="number" min="0" max="400" step="1"></div>
+            </div>
+          </div>
+
+          <div class="section" id="shapeGroup" hidden>
+            <h4>Shape options</h4>
+            <div class="grid2" id="starFields" hidden>
+              <div class="field"><label>Points</label><input id="propStarPoints" type="number" min="3" max="40" step="1"></div>
+              <div class="field"><label>Inner ratio</label><input id="propStarInner" type="number" min="0.05" max="0.95" step="0.05"></div>
+            </div>
+            <div class="field" id="polyFields" hidden><label>Sides</label><input id="propPolySides" type="number" min="3" max="40" step="1"></div>
+            <p class="hint" id="shapeHint"></p>
+          </div>
+
+          <div class="section" id="textGroup" hidden>
+            <h4>Text</h4>
+            <div class="field"><label>Content (multi-line)</label><textarea id="propText" rows="3"></textarea></div>
+            <div class="grid2">
+              <div class="field"><label>Size</label><input id="propFontSize" type="number" min="4" max="500" step="1"></div>
+              <div class="field"><label>Weight</label>
+                <select id="propFontWeight">
+                  <option value="400">Regular</option><option value="600">Semibold</option>
+                  <option value="700">Bold</option><option value="900">Black</option>
+                </select>
+              </div>
+            </div>
+            <div class="grid2">
+              <div class="field"><label>Align</label>
+                <select id="propTextAlign">
+                  <option value="start">Left</option><option value="middle">Center</option><option value="end">Right</option>
+                </select>
+              </div>
+              <div class="field"><label>Line height</label><input id="propLineHeight" type="number" min="0.8" max="3" step="0.05"></div>
+            </div>
+            <div class="grid2">
+              <div class="field"><label>Letter spacing</label><input id="propLetterSpacing" type="number" min="-20" max="80" step="1"></div>
+              <div class="field"><label>Font</label>
+                <select id="propFontFamily">
+                  <option>Arial</option><option>Georgia</option><option>Verdana</option>
+                  <option>Trebuchet MS</option><option>Courier New</option><option>Impact</option>
+                  <option>Segoe UI</option><option>Comic Sans MS</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h4>Effects</h4>
+            <div class="field"><label>Blend mode</label>
+              <select id="propBlend">
+                <option value="normal">Normal</option>
+                <option value="multiply">Multiply</option>
+                <option value="screen">Screen</option>
+                <option value="overlay">Overlay</option>
+                <option value="darken">Darken</option>
+                <option value="lighten">Lighten</option>
+              </select>
+            </div>
+            <div class="field"><label>Blur (px)</label><input id="propBlur" type="number" min="0" max="60" step="1"></div>
+            <div class="toggle-row">
+              <span>Drop shadow</span>
+              <label class="switch"><input type="checkbox" id="propShadowOn"><i></i></label>
+            </div>
+            <div id="shadowFields" hidden>
+              <div class="grid3">
+                <div class="field"><label>X</label><input id="propShadowX" type="number" step="1"></div>
+                <div class="field"><label>Y</label><input id="propShadowY" type="number" step="1"></div>
+                <div class="field"><label>Blur</label><input id="propShadowBlur" type="number" min="0" step="1"></div>
+              </div>
+              <div class="grid2">
+                <div class="field"><label>Colour</label><input id="propShadowColor" type="color" value="#000000"></div>
+                <div class="field"><label>Opacity %</label><input id="propShadowOpacity" type="number" min="0" max="100" step="5"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h4>Actions</h4>
+            <div class="btnrow">
+              <button id="dupBtn2">Duplicate</button>
+              <button id="delBtn2" class="danger">Delete</button>
+              <button id="frontBtn">Bring forward</button>
+              <button id="backBtn">Send backward</button>
+              <button id="frontAllBtn">To front</button>
+              <button id="backAllBtn">To back</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LAYERS -->
+      <div class="panel" id="panel-layers">
+        <div class="paneltitle">Layers
+          <button id="addShapeBtn" class="primary" style="padding:3px 8px;font-size:11px">+ Shape</button>
+        </div>
+        <div class="section" id="layerList"></div>
+        <div class="section">
+          <div class="btnrow">
+            <button id="layerUpBtn">Move up</button>
+            <button id="layerDownBtn">Move down</button>
+          </div>
+          <p class="hint">Top of the list = front of the canvas. Click a layer to select, drag to reorder,
+            double-click the name to rename. The eye toggles visibility; the lock prevents canvas editing.</p>
+        </div>
+      </div>
+
+      <!-- MOTION -->
+      <div class="panel" id="panel-motion">
+        <div class="paneltitle">Motion &amp; Tweening</div>
+        <div class="section">
+          <h4>Timeline</h4>
+          <div class="grid2">
+            <div class="field"><label>Duration (s)</label><input id="motionDuration" type="number" min="0.5" max="60" step="0.5" value="5"></div>
+            <div class="field"><label>FPS</label>
+              <select id="motionFps"><option>12</option><option>24</option><option selected>30</option><option>60</option></select>
+            </div>
+          </div>
+          <div class="toggle-row">
+            <span>Auto-key on edit</span>
+            <label class="switch"><input type="checkbox" id="autoKeyToggle" checked><i></i></label>
+          </div>
+          <div class="field"><label>New keyframe easing</label>
+            <select id="newEase">
+              <option value="linear">Linear</option>
+              <option value="easeIn">Ease in</option>
+              <option value="easeOut">Ease out</option>
+              <option value="easeInOut" selected>Ease in-out</option>
+              <option value="easeInCubic">Ease in cubic</option>
+              <option value="easeOutCubic">Ease out cubic</option>
+              <option value="easeInOutCubic">Ease in-out cubic</option>
+              <option value="easeOutBack">Ease out back</option>
+            </select>
+          </div>
+          <button id="addKfBtn" class="primary" style="width:100%;margin-top:4px">◆ Add keyframe at playhead</button>
+          <p class="hint" id="kfHint">Select an object, then add a keyframe. Move the playhead and edit the object to create a tween.</p>
+        </div>
+        <div class="section">
+          <h4>Keyframes <span id="kfObjectName" style="text-transform:none;color:#8b94a9"></span></h4>
+          <div id="kfList"></div>
+          <div class="btnrow" style="margin-top:8px">
+            <button id="copyMotionBtn">Copy motion</button>
+            <button id="pasteMotionBtn">Paste motion</button>
+          </div>
+          <div class="btnrow" style="margin-top:6px">
+            <button id="reverseMotionBtn">Reverse</button>
+            <button id="clearKfBtn" class="danger">Remove all</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- GUIDE -->
+      <div class="panel" id="panel-guide">
+        <div class="paneltitle">Quick Guide</div>
+        <div class="section">
+          <h4>New here?</h4>
+          <p class="hint">A compact vector and keyframe animation studio for learning the fundamentals. It is
+            <b>not</b> a replacement for Adobe Animate or Illustrator.</p>
+          <button id="openDocsBtn" class="primary" style="width:100%;margin-top:6px">Open full documentation</button>
+          <button id="sampleBtn" style="width:100%;margin-top:6px">Load sample scene</button>
+        </div>
+        <div class="section">
+          <h4>60-second start</h4>
+          <ol class="hint" style="padding-left:18px;margin:0">
+            <li>Press <b>R</b>, drag on the canvas to draw a rectangle.</li>
+            <li>Press <b>V</b>, click it, and change the fill or add a gradient in Design.</li>
+            <li>Go to Motion and press <b>◆ Add keyframe</b> at frame 0.</li>
+            <li>Drag the playhead to 2s, then drag the object. A tween is created automatically.</li>
+            <li>Press <b>Play</b>, then <b>Export</b> — or open <b>Preview</b>.</li>
+          </ol>
+        </div>
+        <div class="section">
+          <h4>Pro touches</h4>
+          <ul class="hint" style="padding-left:18px;margin:0">
+            <li><b>Shift-click</b> to multi-select, then align/distribute.</li>
+            <li><b>Alt-drag</b> duplicates; <b>Shift</b> constrains while moving or resizing.</li>
+            <li><b>Snap</b> shows guides when edges or centres line up.</li>
+            <li><b>Onion skin</b> ghosts the previous and next keyframes.</li>
+            <li><b>Ctrl+K</b> opens the command palette.</li>
+          </ul>
+        </div>
+        <div class="section">
+          <h4>Shortcuts</h4>
+          <p class="hint"><b>V</b> select · <b>R</b> rect · <b>E</b> ellipse · <b>L</b> line · <b>S</b> star · <b>P</b> polygon · <b>T</b> text · <b>B</b> brush · <b>X</b> eraser · <b>H</b> pan<br>
+            <b>Space</b> play/pause · <b>←↑↓→</b> nudge (Shift = 10) · <b>Del</b> delete · <b>Ctrl+Z / Ctrl+Y</b> undo/redo · <b>Ctrl+K</b> commands</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ================= TIMELINE ================= -->
+  <section class="timeline">
+    <div class="tl-head">
+      <strong>◷ Timeline</strong>
+      <button id="tlPlay" title="Play / Pause (Space)">▶</button>
+      <button id="tlStop" title="Stop and rewind">■</button>
+      <label>Loop
+        <select id="tlLoopMode" title="Playback mode">
+          <option value="loop">Loop</option>
+          <option value="once">Once</option>
+          <option value="pingpong">Ping-pong</option>
+        </select>
+      </label>
+      <span class="sepv"></span>
+      <label>Duration <input id="tlDuration" type="number" min="0.5" max="60" step="0.5" value="5"> s</label>
+      <label>FPS
+        <select id="tlFps"><option>12</option><option>24</option><option selected>30</option><option>60</option></select>
+      </label>
+      <label title="Horizontal timeline zoom">Zoom <input id="tlZoom" type="range" min="3" max="40" step="1" value="8"></label>
+      <span class="grow"></span>
+      <span id="tlTime" style="font-size:11px;color:#aeb7cb;white-space:nowrap">Frame 0</span>
+      <button id="tlAddKf" class="primary">◆ Keyframe</button>
+    </div>
+    <div class="tl-body">
+      <div class="track-names" id="trackNames"></div>
+      <div class="tracks-scroll" id="tracksScroll">
+        <div class="timeline-canvas" id="timelineCanvas">
+          <div class="ruler" id="ruler"></div>
+          <div class="rows" id="rows"></div>
+          <div class="playhead" id="playhead" title="Drag to scrub"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ================= DOCS MODAL ================= -->
+<div class="modal-backdrop" id="docsModal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h3>Vecta Motion Pro — Documentation</h3>
+      <button class="x" data-close="docsModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="docs-layout">
+        <div class="docs-nav" id="docsNav">
+          <button class="active" data-doc="start">Getting started</button>
+          <button data-doc="new">What's new in Pro</button>
+          <button data-doc="vectors">Vector graphics basics</button>
+          <button data-doc="animation">Animation basics</button>
+          <button data-doc="tween">Tweening in this app</button>
+          <button data-doc="effects">Gradients &amp; effects</button>
+          <button data-doc="files">Import &amp; export</button>
+          <button data-doc="shortcuts">Keyboard shortcuts</button>
+          <button data-doc="limits">Limitations</button>
+        </div>
+        <div class="docs-content">
+
+          <section class="doc-section active" data-doc="start">
+            <h3>Getting started</h3>
+            <p>Vecta Motion Pro is a small vector drawing and keyframe-animation tool that runs entirely in your browser.
+              It is intentionally simple and experimental — a place to learn the core ideas of vector design and animation.</p>
+            <div class="warnbox"><b>Important:</b> this is a hobbyist/experimental project. It is not meant to replace
+              Adobe Animate or Adobe Illustrator. Expect rough edges, and save your work as a project JSON file regularly.</div>
+            <h4>The interface</h4>
+            <ul>
+              <li><b>Left toolbar</b> — selection and drawing tools.</li>
+              <li><b>Canvas</b> — the artboard. Everything you draw lives here.</li>
+              <li><b>Right inspector</b> — Design, Layers, Motion and Guide panels.</li>
+              <li><b>Bottom timeline</b> — frames, keyframes and playback.</li>
+            </ul>
+            <h4>Your first drawing</h4>
+            <ol>
+              <li>Press <code>R</code> and drag on the canvas to draw a rectangle.</li>
+              <li>Press <code>V</code>, click the rectangle, and change its fill colour in the Design tab.</li>
+              <li>Press <code>E</code> for an ellipse, <code>S</code> for a star, <code>P</code> for a polygon.</li>
+              <li>Use the Layers tab to change stacking order, visibility and locking.</li>
+            </ol>
+            <h4>Your first animation</h4>
+            <ol>
+              <li>Select an object.</li>
+              <li>Open Motion and click <b>◆ Add keyframe</b> (this captures the object at the current frame).</li>
+              <li>Drag the playhead in the timeline to about 2 seconds.</li>
+              <li>Move or resize the object on the canvas. A new keyframe is created automatically.</li>
+              <li>Press <b>Play</b>. The object now tweens between the two keyframes.</li>
+            </ol>
+            <div class="note"><b>Autosave:</b> every change is mirrored to this browser's local storage. If you close
+              the tab, your last session is restored automatically. Use <b>Save</b> to download a real project file.</div>
+          </section>
+
+          <section class="doc-section" data-doc="new">
+            <h3>What's new in Pro</h3>
+            <ul>
+              <li><b>Multi-select</b> — Shift-click objects, then move, resize, duplicate, align or distribute them.</li>
+              <li><b>8 resize handles + rotation handle</b> — hold Shift to preserve aspect ratio or snap rotation to 15°.</li>
+              <li><b>Snapping guides</b> — edges and centres align to the artboard and other objects. Toggle in the menu.</li>
+              <li><b>Gradients</b> — linear two-colour fills with adjustable angle.</li>
+              <li><b>Effects</b> — drop shadows, blur and CSS blend modes.</li>
+              <li><b>Star &amp; polygon tools</b> with points/sides and inner radius controls.</li>
+              <li><b>Brush &amp; eraser</b> — freehand polyline strokes plus one-click object removal.</li>
+              <li><b>PSD / AI / PDF import</b> — best-effort raster layers or first-page render.</li>
+              <li><b>Tabbed inspector</b> — Design, Layers, Motion and Guide panels.</li>
+              <li><b>Multi-line text</b> with alignment, line height and letter spacing.</li>
+              <li><b>Onion skin</b> — ghost the previous and next keyframes while animating.</li>
+              <li><b>Motion tools</b> — copy, paste and reverse keyframes; auto-key can be switched off.</li>
+              <li><b>Timeline zoom and keyframe retiming</b> — drag diamonds to change when they happen.</li>
+              <li><b>Playback modes</b> — loop, once, or ping-pong.</li>
+              <li><b>Preview window</b> — full-screen playback without the editor chrome.</li>
+              <li><b>Sprite-sheet export</b>, JPEG/WebP stills, and improved video rendering.</li>
+              <li><b>Command palette</b> (<code>Ctrl+K</code>) for fast access to every action.</li>
+              <li><b>Autosave</b> to local storage plus sample scene.</li>
+            </ul>
+          </section>
+
+          <section class="doc-section" data-doc="vectors">
+            <h3>Vector graphics basics</h3>
+            <p>Vector graphics describe shapes with maths (positions, curves, fills) instead of pixels.
+              That means they can be scaled without becoming blurry. This app stores every object as a vector shape.</p>
+            <h4>Shapes</h4>
+            <ul>
+              <li><b>Rectangle</b> — width, height and corner radius.</li>
+              <li><b>Ellipse</b> — defined by its bounding box.</li>
+              <li><b>Line</b> — a straight stroke.</li>
+              <li><b>Star</b> — adjustable point count and inner radius.</li>
+              <li><b>Polygon</b> — adjustable side count.</li>
+              <li><b>Brush</b> — a freehand polyline stroke (editable like any object).</li>
+              <li><b>Text</b> — live text, now multi-line.</li>
+              <li><b>Image</b> — a raster image placed on the artboard (still scales, but is not vector).</li>
+            </ul>
+            <h4>Fill, stroke and opacity</h4>
+            <p><b>Fill</b> can be a solid colour, a linear gradient or none. <b>Stroke</b> is the outline colour; its width
+              is in pixels, and it can be dashed. <b>Opacity</b> controls transparency.</p>
+            <h4>Stacking order</h4>
+            <p>Objects are drawn from back to front. The Layers tab lists the front-most object at the top.
+              Use <b>Bring forward</b> / <b>Send backward</b> or drag rows to reorder.</p>
+            <h4>Transforms</h4>
+            <p>Every object has X, Y, width, height, rotation, scale X and scale Y. Rotation and scale happen around
+              the object’s centre. Drag the corner or edge handles to resize, or the round handle above the box to rotate.</p>
+          </section>
+
+          <section class="doc-section" data-doc="animation">
+            <h3>Animation basics</h3>
+            <p>Animation is a sequence of still images shown quickly. In this app you don’t draw every frame;
+              you set a few <b>keyframes</b> and the software fills in the frames between them.</p>
+            <h4>Frames, FPS and duration</h4>
+            <ul>
+              <li><b>Frame</b> — one moment in time.</li>
+              <li><b>FPS</b> — frames per second. 24–30 FPS feels smooth; 12 FPS feels choppier and more stylised.</li>
+              <li><b>Duration</b> — total length of the timeline in seconds.</li>
+            </ul>
+            <h4>Keyframes</h4>
+            <p>A keyframe stores an object’s animated values at a specific frame: position, size, rotation,
+              scale, opacity, fills and gradient colours. Diamonds in the timeline show where keyframes are.
+              Drag a diamond sideways to retime it.</p>
+            <h4>The auto-key rule</h4>
+            <p>Once an object has at least one keyframe, editing that object creates or updates a keyframe at the
+              current playhead position. This is what makes quick tweening possible. Objects with no keyframes stay
+              static. You can switch auto-key off in the Motion panel.</p>
+            <h4>Playback</h4>
+            <p>Use the play button, the Space bar, or the timeline play button. Choose <b>Loop</b>, <b>Once</b> or
+              <b>Ping-pong</b> in the timeline bar. Scrub the playhead by clicking or dragging the ruler.</p>
+          </section>
+
+          <section class="doc-section" data-doc="tween">
+            <h3>Tweening in this app</h3>
+            <p><b>Tweening</b> means generating the in-between values automatically. Select an object with at least
+              two keyframes, and the app interpolates position, size, rotation, scale, opacity and colour.</p>
+            <h4>Make a bouncing ball</h4>
+            <ol>
+              <li>Draw an ellipse.</li>
+              <li>At frame 0, add a keyframe.</li>
+              <li>Move the playhead to about 0.6s and move the ball down.</li>
+              <li>Move the playhead to about 1.2s and move it back up.</li>
+              <li>Set the first keyframe’s easing to <b>Ease out</b> and the middle one to <b>Ease in</b>.</li>
+              <li>Press Play.</li>
+            </ol>
+            <h4>Easing</h4>
+            <p>Each keyframe has an easing setting that controls the segment that starts at that keyframe:</p>
+            <ul>
+              <li><b>Linear</b> — constant speed.</li>
+              <li><b>Ease in / out</b> — slow start or slow finish.</li>
+              <li><b>Ease in-out</b> — slow at both ends (good for smooth movement).</li>
+              <li><b>Cubic</b> variants — stronger acceleration.</li>
+              <li><b>Ease out back</b> — overshoots slightly, useful for playful motion.</li>
+            </ul>
+            <p>Change easing in the Motion tab’s keyframe list. The tween updates instantly. Use <b>Copy motion</b>
+              and <b>Paste motion</b> to move a whole animation onto another object, or <b>Reverse</b> to flip it.</p>
+            <div class="note">If you move the playhead and edit a tweened object, a new keyframe is inserted at that frame.
+              This is normal and lets you refine the motion. Turn off <b>Auto-key</b> if you only want to adjust the
+              object without recording a keyframe.</div>
+          </section>
+
+          <section class="doc-section" data-doc="effects">
+            <h3>Gradients &amp; effects</h3>
+            <h4>Linear gradients</h4>
+            <p>Select an object and choose <b>Linear gradient</b> under Fill type. Pick the two colours and an angle.
+              Gradients export cleanly to SVG and PNG, and animate with keyframes if you keyframe the colours.</p>
+            <h4>Drop shadows and blur</h4>
+            <p>Effects are rendered with SVG filters. Shadows use X/Y offset, blur radius, colour and opacity.
+              A global blur softens the whole object. Both effects survive SVG export; very large blur values can be
+              slow on very large artboards.</p>
+            <h4>Blend modes</h4>
+            <p>Blend modes map to CSS <code>mix-blend-mode</code> and work in the editor and browser-rendered exports.
+              Some PDF or older SVG viewers may ignore them.</p>
+            <div class="note">Effects stack with opacity. A screen-blended glow shape on top of a dark background is a
+              quick way to fake lighting.</div>
+          </section>
+
+          <section class="doc-section" data-doc="files">
+            <h3>Import &amp; export</h3>
+            <h4>Images</h4>
+            <p>PNG, JPEG, WebP, GIF and SVG files can be imported as image objects. Imported SVGs are treated as a single
+              image, not as editable separate shapes. Images are embedded in the project JSON, so files can get large.</p>
+            <h4>PSD (Photoshop)</h4>
+            <p>PSD import uses the open-source <code>ag-psd</code> decoder loaded from a CDN. Simple documents with
+              raster layers usually import as separate image layers. Layer masks, smart objects, adjustment layers,
+              text layers and some blend modes may be flattened, missing or inaccurate.</p>
+            <div class="warnbox">PSD import is best-effort. For important work, export a PNG or SVG from Photoshop first,
+              or rebuild the artwork with vector shapes here.</div>
+            <h4>AI (Illustrator)</h4>
+            <p>Most modern <code>.ai</code> files are PDF-compatible. This app tries to render the first page as an image
+              using PDF.js. That means the artwork arrives as a raster image, not editable paths. Very old EPS-only
+              <code>.ai</code> files are not supported.</p>
+            <p><b>Best workflow:</b> in Illustrator choose <b>File → Export → SVG</b>, then import that SVG here
+              (or use PNG). It keeps the best quality.</p>
+            <h4>Project files</h4>
+            <p><b>Save</b> downloads a <code>.json</code> project containing objects, keyframes, canvas settings and
+              timeline settings. <b>Open</b> restores it. The browser also keeps an autosave copy.</p>
+            <h4>Exporting</h4>
+            <ul>
+              <li><b>SVG</b> — true vector export of the current frame.</li>
+              <li><b>PNG / JPEG / WebP</b> — raster export of the current frame, with scale and transparency options.</li>
+              <li><b>Sprite sheet</b> — every timeline frame packed into a PNG grid. Useful for games.</li>
+              <li><b>MP4 H.264 / H.265</b> — available only if your browser’s MediaRecorder supports it.
+                Chrome/Edge are the best bet. H.265 is rare.</li>
+              <li><b>WebM (VP9/VP8)</b> — widely supported fallback.</li>
+            </ul>
+            <p>Video export renders the timeline frame by frame. Audio is not supported. Very long animations or
+              huge canvases may be slow. Video timing follows real time, so keep the tab visible while exporting.</p>
+          </section>
+
+          <section class="doc-section" data-doc="shortcuts">
+            <h3>Keyboard shortcuts</h3>
+            <table>
+              <tr><th>Key</th><th>Action</th></tr>
+              <tr><td>V</td><td>Select / move tool</td></tr>
+              <tr><td>R</td><td>Rectangle tool</td></tr>
+              <tr><td>E</td><td>Ellipse tool</td></tr>
+              <tr><td>L</td><td>Line tool</td></tr>
+              <tr><td>S</td><td>Star tool</td></tr>
+              <tr><td>P</td><td>Polygon tool</td></tr>
+              <tr><td>T</td><td>Text tool</td></tr>
+              <tr><td>B</td><td>Brush tool</td></tr>
+              <tr><td>X</td><td>Eraser (click an object to delete it)</td></tr>
+              <tr><td>H</td><td>Hand / pan tool</td></tr>
+              <tr><td>Space</td><td>Play / pause</td></tr>
+              <tr><td>← ↑ ↓ →</td><td>Nudge selected object(s) by 1px (Shift = 10px)</td></tr>
+              <tr><td>, / .</td><td>Step one frame backward / forward</td></tr>
+              <tr><td>Home / End</td><td>Jump to first / last frame</td></tr>
+              <tr><td>Delete / Backspace</td><td>Delete selected object(s)</td></tr>
+              <tr><td>Ctrl/Cmd + A</td><td>Select all</td></tr>
+              <tr><td>Ctrl/Cmd + C / X / V</td><td>Copy / cut / paste objects</td></tr>
+              <tr><td>Ctrl/Cmd + Z</td><td>Undo</td></tr>
+              <tr><td>Ctrl/Cmd + Y</td><td>Redo</td></tr>
+              <tr><td>Ctrl/Cmd + D</td><td>Duplicate</td></tr>
+              <tr><td>Ctrl/Cmd + K</td><td>Command palette</td></tr>
+              <tr><td>Ctrl/Cmd + S</td><td>Save project JSON</td></tr>
+              <tr><td>Ctrl/Cmd + wheel</td><td>Zoom canvas</td></tr>
+              <tr><td>Shift + click</td><td>Add to / remove from selection</td></tr>
+              <tr><td>Alt + drag</td><td>Duplicate while moving</td></tr>
+              <tr><td>G / O</td><td>Toggle grid / onion skin</td></tr>
+              <tr><td>0</td><td>Fit artboard</td></tr>
+              <tr><td>Esc</td><td>Deselect / close dialog</td></tr>
+            </table>
+          </section>
+
+          <section class="doc-section" data-doc="limits">
+            <h3>Limitations &amp; honest notes</h3>
+            <div class="warnbox">This program is designed for <b>experimental / hobbyist use</b>. It is not meant to
+              replace Adobe Animate, Adobe Illustrator, After Effects or other professional tools.</div>
+            <ul>
+              <li>No native PSD/AI editing. PSD is decoded best-effort; AI is usually rasterised through PDF.</li>
+              <li>No masks, symbols, bones, audio, or boolean path operations.</li>
+              <li>No groups: multi-select, align and distribute are the grouping substitutes.</li>
+              <li>Text is single-style per object; no rich text runs.</li>
+              <li>No collaborative editing or cloud storage. Work lives in this browser's local storage and in files you save.</li>
+              <li>Video export uses the browser’s MediaRecorder. MP4/H.265 support varies by browser and platform.
+                Timing may not be perfectly frame-accurate.</li>
+              <li>Large PSD files, huge images or very long timelines can be slow or run out of memory.</li>
+              <li>This is a learning tool. Save your project as JSON often.</li>
+            </ul>
+            <h4>Recommended browser</h4>
+            <p>Chrome or Edge on desktop for the best video export support. Firefox and Safari can draw and animate,
+              but video formats may be limited to WebM or unavailable.</p>
+          </section>
+
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button data-close="docsModal">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= EXPORT MODAL ================= -->
+<div class="modal-backdrop" id="exportModal">
+  <div class="modal-card" style="max-width:580px">
+    <div class="modal-head">
+      <h3>Export</h3>
+      <button class="x" data-close="exportModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="exp-row">
+        <label for="expFormat">Format</label>
+        <select id="expFormat"></select>
+      </div>
+      <div class="exp-row" id="expResRow">
+        <label for="expRes">Video resolution</label>
+        <select id="expRes"></select>
+      </div>
+      <div class="exp-row" id="expScaleRow">
+        <label for="expScale">Image scale</label>
+        <select id="expScale">
+          <option value="0.5">0.5×</option>
+          <option value="1" selected>1×</option>
+          <option value="2">2×</option>
+        </select>
+      </div>
+      <div class="exp-row" id="expColumnsRow">
+        <label for="expColumns">Sprite columns</label>
+        <input id="expColumns" type="number" min="1" max="32" step="1" value="8">
+      </div>
+      <div class="exp-row" id="expTransparentRow">
+        <label for="expTransparent">Background</label>
+        <label class="inline"><input type="checkbox" id="expTransparent"> Transparent</label>
+      </div>
+      <p class="hint" id="expInfo"></p>
+      <div class="progress"><div id="expBar"></div></div>
+      <p class="hint" id="expStatus">Ready.</p>
+    </div>
+    <div class="modal-foot">
+      <button id="expCancel">Cancel</button>
+      <button id="expStart" class="primary">Export</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= PREVIEW MODAL ================= -->
+<div class="modal-backdrop" id="previewModal" style="padding:0;background:#05070bee">
+  <div class="preview-shell">
+    <div class="modal-head">
+      <h3>Preview</h3>
+      <span class="chip" id="previewMeta">1920 × 1080</span>
+      <button class="x" data-close="previewModal" id="previewClose">✕</button>
+    </div>
+    <div class="preview-stage" id="previewStage">
+      <svg id="previewSvg" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="preview-bar">
+      <button id="previewPlay" class="primary">▶ Play</button>
+      <button id="previewRestart">↺ Restart</button>
+      <label>Loop
+        <select id="previewLoop">
+          <option value="loop">Loop</option>
+          <option value="once">Once</option>
+          <option value="pingpong">Ping-pong</option>
+        </select>
+      </label>
+      <span class="grow"></span>
+      <span id="previewTime" style="font-size:11px;color:#aeb7cb">0.00s / 0.00s</span>
+      <button data-close="previewModal">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= COMMAND PALETTE ================= -->
+<div class="palette-backdrop" id="paletteBackdrop">
+  <div class="palette" role="dialog" aria-label="Command palette">
+    <input id="paletteInput" type="text" placeholder="Type a command…" autocomplete="off" spellcheck="false">
+    <div class="palette-list" id="paletteList"></div>
+    <div class="palette-foot">↑ ↓ navigate · Enter run · Esc close</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<input type="file" id="fileInput" hidden>
+<input type="file" id="projectInput" accept=".json,application/json" hidden>
+
+<script>
+(function(){
+'use strict';
+
+/* ------------------------------------------------------------------ */
+/*  Constants & tiny helpers                                          */
+/* ------------------------------------------------------------------ */
+const NS = 'http://www.w3.org/2000/svg';
+const XLINK = 'http://www.w3.org/1999/xlink';
+const AUTOSAVE_KEY = 'vecta-motion-pro.autosave.v3';
+const $id = id => document.getElementById(id);
+const $ = sel => document.querySelector(sel);
+const $$ = sel => Array.from(document.querySelectorAll(sel));
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+const deep = o => JSON.parse(JSON.stringify(o));
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const NS_ATTR = value => value;
+
+/* ------------------------------------------------------------------ */
+/*  State                                                             */
+/* ------------------------------------------------------------------ */
+let nextId = 1;
+let objects = [];                 // bottom -> top
+let keyframes = {};               // id -> [ keyframe ]
+let selectedIds = [];
+let canvasW = 1920, canvasH = 1080, bgColor = '#ffffff';
+let timeline = { duration: 5, fps: 30, frame: 0, loop: 'loop', autoKey: true };
+let settings = { grid: false, snap: true, onion: false };
+let tool = 'select';
+let zoom = 0.4;
+let undoStack = [], redoStack = [], editSnapshot = null;
+let gesture = null;
+let playing = false, rafId = 0, playStartTime = 0, playStartFrame = 0, playDir = 1;
+let docName = 'Untitled Project';
+let pxPerFrame = 8;
+let exportCancel = false;
+let videoFormatsCache = null;
+let clipboard = null;
+let motionClipboard = null;
+let snapGuides = [];
+let marqueeRect = null;
+let defSeq = 0;
+let autosaveTimer = 0;
+let paletteItems = [], paletteIndex = 0;
+let previewPlaying = false, previewRaf = 0, previewStart = 0, previewStartFrame = 0, previewDir = 1;
+let previewFrame = 0;
+
+const ANIM_PROPS = ['x','y','w','h','rotation','scaleX','scaleY','opacity'];
+const ANIM_COLORS = ['fill','gradFrom','gradTo'];
+const EASINGS = {
+  linear: t => t,
+  easeIn: t => t*t,
+  easeOut: t => 1-(1-t)*(1-t),
+  easeInOut: t => t < .5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2,
+  easeInCubic: t => t*t*t,
+  easeOutCubic: t => 1 - Math.pow(1-t,3),
+  easeInOutCubic: t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2,
+  easeOutBack: t => { const c1=1.70158, c3=c1+1; return 1 + c3*Math.pow(t-1,3) + c1*Math.pow(t-1,2); }
+};
+const EASE_LABELS = {
+  linear:'Linear', easeIn:'Ease in', easeOut:'Ease out', easeInOut:'Ease in-out',
+  easeInCubic:'Ease in cubic', easeOutCubic:'Ease out cubic',
+  easeInOutCubic:'Ease in-out cubic', easeOutBack:'Ease out back'
+};
+const TYPE_LABELS = { rect:'Rect', ellipse:'Ellipse', line:'Line', star:'Star', polygon:'Polygon',
+  text:'Text', path:'Brush', image:'Image' };
+
+/* ------------------------------------------------------------------ */
+/*  Basic utilities                                                   */
+/* ------------------------------------------------------------------ */
+function totalFrames(){ return Math.max(1, Math.round(timeline.duration * timeline.fps)); }
+function getSelected(){ return objects.find(o => o.id === selectedIds[selectedIds.length-1]) || null; }
+function selectedObjects(){ return objects.filter(o => selectedIds.includes(o.id)); }
+function isSelected(id){ return selectedIds.includes(id); }
+
+function toast(msg, ms=2600){
+  const t = $id('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(()=>t.classList.remove('show'), ms);
+}
+
+function download(blob, filename){
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
+}
+
+function safeName(){
+  return (docName || 'vecta-motion').replace(/[\\/:*?"<>|]+/g,'-').trim() || 'vecta-motion';
+}
+
+function loadScript(src){
+  return new Promise((resolve,reject)=>{
+    const existing = document.querySelector(`script[src="${src}"]`);
+    if (existing) return resolve();
+    const s = document.createElement('script');
+    s.src = src;
+    s.async = true;
+    s.onload = () => resolve();
+    s.onerror = () => reject(new Error('Failed to load '+src));
+    document.head.appendChild(s);
+  });
+}
+
+function toHex(c){
+  if (typeof c !== 'string') return '#8b7bff';
+  if (/^#[0-9a-f]{6}$/i.test(c)) return c;
+  if (/^#[0-9a-f]{3}$/i.test(c)) return '#'+c[1]+c[1]+c[2]+c[2]+c[3]+c[3];
+  return '#8b7bff';
+}
+
+function parseHex(c){
+  const h = toHex(c).slice(1);
+  return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)];
+}
+function lerpColor(a,b,t){
+  const A = parseHex(a), B = parseHex(b);
+  const r = Math.round(A[0]+(B[0]-A[0])*t);
+  const g = Math.round(A[1]+(B[1]-A[1])*t);
+  const bl = Math.round(A[2]+(B[2]-A[2])*t);
+  return '#' + [r,g,bl].map(v=>clamp(v,0,255).toString(16).padStart(2,'0')).join('');
+}
+
+/* ------------------------------------------------------------------ */
+/*  Save / undo / autosave                                            */
+/* ------------------------------------------------------------------ */
+function serializeState(){
+  return JSON.stringify({
+    app:'vecta-motion-pro', version:3,
+    docName, canvasW, canvasH, bgColor,
+    objects, keyframes, nextId,
+    timeline:{ duration:timeline.duration, fps:timeline.fps, loop:timeline.loop,
+      autoKey:timeline.autoKey, frame:timeline.frame },
+    settings:{ grid:settings.grid, snap:settings.snap, onion:settings.onion },
+    selectedIds
+  });
+}
+
+function markUnsaved(){
+  const el = $id('saveStatus');
+  el.textContent = '● Unsaved changes';
+  el.classList.add('dirty');
+  scheduleAutosave();
+}
+function markSaved(){
+  const el = $id('saveStatus');
+  el.textContent = '● Saved';
+  el.classList.remove('dirty');
+}
+function markAutosaved(){
+  const el = $id('saveStatus');
+  if (el.classList.contains('dirty')){
+    el.textContent = '● Unsaved · autosaved';
+  }
+}
+
+function scheduleAutosave(){
+  clearTimeout(autosaveTimer);
+  autosaveTimer = setTimeout(()=>{
+    try {
+      localStorage.setItem(AUTOSAVE_KEY, serializeState());
+      markAutosaved();
+    } catch (err){
+      if (!scheduleAutosave._warned){
+        scheduleAutosave._warned = true;
+        toast('Autosave skipped: browser storage is full. Save a project JSON file.', 5000);
+      }
+    }
+  }, 700);
+}
+
+function snapshot(){
+  undoStack.push(serializeState());
+  if (undoStack.length > 120) undoStack.shift();
+  redoStack.length = 0;
+  markUnsaved();
+}
+
+function beginEdit(){
+  if (!editSnapshot) editSnapshot = serializeState();
+}
+function commitEdit(){
+  if (!editSnapshot) return;
+  const now = serializeState();
+  if (editSnapshot !== now){
+    undoStack.push(editSnapshot);
+    if (undoStack.length > 120) undoStack.shift();
+    redoStack.length = 0;
+    markUnsaved();
+  }
+  editSnapshot = null;
+  // Auto-key edits may have added retimed keyframes; keep the timeline in sync.
+  if (getSelected()){ buildTimeline(); buildKeyframeList(); }
+}
+
+function undo(){
+  if (!undoStack.length) return;
+  stopPlayback();
+  redoStack.push(serializeState());
+  applyState(undoStack.pop());
+  markUnsaved();
+}
+function redo(){
+  if (!redoStack.length) return;
+  stopPlayback();
+  undoStack.push(serializeState());
+  applyState(redoStack.pop());
+  markUnsaved();
+}
+
+/* ------------------------------------------------------------------ */
+/*  Canvas size & zoom                                                */
+/* ------------------------------------------------------------------ */
+function applyCanvasSize(){
+  const svg = $id('svg');
+  svg.setAttribute('viewBox', `0 0 ${canvasW} ${canvasH}`);
+  $id('bgRect').setAttribute('width', canvasW);
+  $id('bgRect').setAttribute('height', canvasH);
+  $id('bgRect').setAttribute('fill', bgColor);
+  $id('gridRect').setAttribute('width', canvasW);
+  $id('gridRect').setAttribute('height', canvasH);
+  $id('gridRect').setAttribute('display', settings.grid ? 'inline' : 'none');
+  $id('bgColorHead').value = toHex(bgColor);
+  $id('bgColor2').value = toHex(bgColor);
+  $id('canvasWInput').value = canvasW;
+  $id('canvasHInput').value = canvasH;
+  $id('dimensions').textContent = canvasW + ' × ' + canvasH + ' px';
+  const size = $id('artboard');
+  size.style.width = Math.round(canvasW * zoom) + 'px';
+  size.style.height = Math.round(canvasH * zoom) + 'px';
+  syncCanvasPreset();
+  drawOverlay();
+}
+
+function syncCanvasPreset(){
+  const sel = $id('canvasPreset');
+  if (!sel) return;
+  const key = canvasW + 'x' + canvasH;
+  const found = Array.from(sel.options).some(o => o.value === key);
+  sel.value = found ? key : 'custom';
+}
+
+function fitCanvas(){
+  const stage = $id('stage');
+  const pad = 56;
+  const availW = stage.clientWidth - pad;
+  const availH = stage.clientHeight - pad;
+  if (availW <= 20 || availH <= 20) return;
+  zoom = clamp(Math.min(availW / canvasW, availH / canvasH), 0.05, 4);
+  applyZoom();
+}
+
+function setZoom(z){
+  zoom = clamp(z, 0.05, 4);
+  applyZoom();
+}
+
+function zoomAt(z, clientX, clientY){
+  const stage = $id('stage');
+  const rect = stage.getBoundingClientRect();
+  const old = zoom;
+  const p = { x: (clientX - rect.left + stage.scrollLeft) / old, y: (clientY - rect.top + stage.scrollTop) / old };
+  setZoom(z);
+  stage.scrollLeft = p.x * zoom - (clientX - rect.left);
+  stage.scrollTop = p.y * zoom - (clientY - rect.top);
+}
+
+function applyZoom(){
+  const ab = $id('artboard');
+  ab.style.width = Math.round(canvasW * zoom) + 'px';
+  ab.style.height = Math.round(canvasH * zoom) + 'px';
+  $id('zoomLabel').textContent = Math.round(zoom * 100) + '%';
+  $id('zoomStatus').textContent = Math.round(zoom * 100) + '%';
+  drawOverlay();
+}
+
+/* ------------------------------------------------------------------ */
+/*  Object model                                                      */
+/* ------------------------------------------------------------------ */
+function makeObject(type, x, y, extra){
+  const names = {rect:'Rectangle', ellipse:'Ellipse', line:'Line', star:'Star', polygon:'Polygon',
+    text:'Text', path:'Brush', image:'Image'};
+  const count = objects.filter(o => o.type === type).length + 1;
+  const o = {
+    id: nextId++,
+    type,
+    name: (names[type] || type) + ' ' + count,
+    x, y, w: 200, h: 140,
+    rotation: 0, scaleX: 1, scaleY: 1, opacity: 1, visible: true, locked: false,
+    fillMode: 'solid', fill: '#8b7bff', gradFrom: '#8b7bff', gradTo: '#43d9c0', gradAngle: 90,
+    stroke: '#2b2545', strokeWidth: 0, strokeDash: '', radius: 12,
+    points: null, text: '', fontSize: 64, fontFamily: 'Arial', fontWeight: '700',
+    textAlign: 'start', lineHeight: 1.2, letterSpacing: 0,
+    starPoints: 5, starInner: 0.5, polygonSides: 6,
+    shadow: { enabled:false, x:8, y:8, blur:14, color:'#000000', opacity:0.35 },
+    blur: 0, blend: 'normal',
+    href: null
+  };
+  if (extra) Object.assign(o, extra);
+  return o;
+}
+
+function normalizeObject(o){
+  const defaults = makeObject('rect', 0, 0);
+  const merged = Object.assign({}, defaults, o);
+  merged.id = Number(o.id) || nextId++;
+  merged.scaleX = Number.isFinite(merged.scaleX) ? merged.scaleX : 1;
+  merged.scaleY = Number.isFinite(merged.scaleY) ? merged.scaleY : 1;
+  merged.opacity = Number.isFinite(merged.opacity) ? merged.opacity : 1;
+  merged.fill = toHex(merged.fill);
+  merged.stroke = toHex(merged.stroke);
+  merged.gradFrom = toHex(merged.gradFrom);
+  merged.gradTo = toHex(merged.gradTo);
+  merged.visible = merged.visible !== false;
+  merged.locked = merged.locked === true;
+  merged.fillMode = ['solid','gradient','none'].includes(merged.fillMode) ? merged.fillMode : 'solid';
+  merged.textAlign = ['start','middle','end'].includes(merged.textAlign) ? merged.textAlign : 'start';
+  merged.shadow = Object.assign({ enabled:false, x:8, y:8, blur:14, color:'#000000', opacity:0.35 },
+    (o && o.shadow) || {});
+  merged.shadow.color = toHex(merged.shadow.color);
+  return merged;
+}
+
+const measureCtx = document.createElement('canvas').getContext('2d');
+function measureTextObject(o){
+  const lines = String(o.text || ' ').split('\n');
+  const size = o.fontSize || 64;
+  measureCtx.font = `${o.fontWeight || 700} ${size}px ${o.fontFamily || 'Arial'}`;
+  let width = 24;
+  for (const line of lines){
+    width = Math.max(width, measureCtx.measureText(line || ' ').width + Math.max(0, o.letterSpacing || 0) * Math.max(0, line.length - 1));
+  }
+  o.w = Math.ceil(width + 12);
+  o.h = Math.ceil(Math.max(1, lines.length) * size * (o.lineHeight || 1.2) + size * 0.25);
+}
+
+function bounds(o){
+  if (o.type === 'line'){
+    return { x: Math.min(o.x, o.x + o.w), y: Math.min(o.y, o.y + o.h),
+             w: Math.abs(o.w), h: Math.abs(o.h) };
+  }
+  return { x: o.x, y: o.y, w: o.w, h: o.h };
+}
+
+function rectsIntersect(a, b){
+  return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+}
+
+function unionBounds(list){  if (!list.length) return null;
+  let x1 = Infinity, y1 = Infinity, x2 = -Infinity, y2 = -Infinity;
+  for (const o of list){
+    const b = bounds(o);
+    x1 = Math.min(x1, b.x); y1 = Math.min(y1, b.y);
+    x2 = Math.max(x2, b.x + b.w); y2 = Math.max(y2, b.y + b.h);
+  }
+  return { x:x1, y:y1, w:x2-x1, h:y2-y1 };
+}
+
+/* ------------------------------------------------------------------ */
+/*  SVG rendering                                                     */
+/* ------------------------------------------------------------------ */
+function applyGroupTransform(g, o){
+  const cx = o.x + (o.w || 0) / 2;
+  const cy = o.y + (o.h || 0) / 2;
+  const t = [];
+  if (o.rotation) t.push(`rotate(${o.rotation} ${cx} ${cy})`);
+  if ((o.scaleX !== 1 || o.scaleY !== 1) && o.scaleX !== 0 && o.scaleY !== 0){
+    t.push(`translate(${cx} ${cy}) scale(${o.scaleX} ${o.scaleY}) translate(${-cx} ${-cy})`);
+  }
+  if (t.length) g.setAttribute('transform', t.join(' '));
+  else g.removeAttribute('transform');
+}
+
+function polygonPoints(o, sides, inner){
+  const b = bounds(o);
+  const cx = b.x + b.w/2, cy = b.y + b.h/2;
+  const rx = Math.max(0.1, b.w/2), ry = Math.max(0.1, b.h/2);
+  const pts = [];
+  const count = inner ? sides * 2 : sides;
+  for (let i = 0; i < count; i++){
+    const a = -Math.PI/2 + i * Math.PI * 2 / count;
+    const scale = inner && i % 2 ? inner : 1;
+    pts.push((cx + Math.cos(a) * rx * scale).toFixed(2) + ',' + (cy + Math.sin(a) * ry * scale).toFixed(2));
+  }
+  return pts.join(' ');
+}
+
+function buildGradientDef(o, id){
+  const angle = (o.gradAngle || 0) * Math.PI / 180;
+  const x1 = 0.5 - Math.cos(angle)/2, y1 = 0.5 - Math.sin(angle)/2;
+  const x2 = 0.5 + Math.cos(angle)/2, y2 = 0.5 + Math.sin(angle)/2;
+  const grad = document.createElementNS(NS,'linearGradient');
+  grad.setAttribute('id', id);
+  grad.setAttribute('x1', x1.toFixed(4)); grad.setAttribute('y1', y1.toFixed(4));
+  grad.setAttribute('x2', x2.toFixed(4)); grad.setAttribute('y2', y2.toFixed(4));
+  const s1 = document.createElementNS(NS,'stop');
+  s1.setAttribute('offset','0%'); s1.setAttribute('stop-color', o.gradFrom || o.fill);
+  const s2 = document.createElementNS(NS,'stop');
+  s2.setAttribute('offset','100%'); s2.setAttribute('stop-color', o.gradTo || o.fill);
+  grad.append(s1, s2);
+  return grad;
+}
+
+function buildFilterDef(o, id){
+  const hasShadow = o.shadow && o.shadow.enabled;
+  if (!hasShadow && !(o.blur > 0)) return null;
+  const f = document.createElementNS(NS,'filter');
+  f.setAttribute('id', id);
+  f.setAttribute('x','-60%'); f.setAttribute('y','-60%');
+  f.setAttribute('width','220%'); f.setAttribute('height','220%');
+  f.setAttribute('color-interpolation-filters','sRGB');
+  if (o.blur > 0){
+    const blur = document.createElementNS(NS,'feGaussianBlur');
+    blur.setAttribute('stdDeviation', o.blur);
+    f.appendChild(blur);
+  }
+  if (hasShadow){
+    const sh = document.createElementNS(NS,'feDropShadow');
+    sh.setAttribute('dx', o.shadow.x);
+    sh.setAttribute('dy', o.shadow.y);
+    sh.setAttribute('stdDeviation', o.shadow.blur);
+    sh.setAttribute('flood-color', o.shadow.color);
+    sh.setAttribute('flood-opacity', o.shadow.opacity);
+    f.appendChild(sh);
+  }
+  return f;
+}
+
+function buildShape(o, fillOverride){
+  let n;
+  const fill = fillOverride !== undefined ? fillOverride
+    : (o.fillMode === 'gradient' ? (o.fill || '#8b7bff') : o.fillMode === 'none' ? 'none' : o.fill);
+  const stroke = o.strokeWidth > 0 ? o.stroke : 'none';
+  if (o.type === 'rect'){
+    n = document.createElementNS(NS,'rect');
+    n.setAttribute('x', o.x); n.setAttribute('y', o.y);
+    n.setAttribute('width', Math.max(0.1, o.w)); n.setAttribute('height', Math.max(0.1, o.h));
+    n.setAttribute('rx', o.radius || 0);
+  } else if (o.type === 'ellipse'){
+    const b = bounds(o);
+    n = document.createElementNS(NS,'ellipse');
+    n.setAttribute('cx', b.x + b.w/2); n.setAttribute('cy', b.y + b.h/2);
+    n.setAttribute('rx', Math.max(0.1, b.w/2)); n.setAttribute('ry', Math.max(0.1, b.h/2));
+  } else if (o.type === 'line'){
+    n = document.createElementNS(NS,'line');
+    n.setAttribute('x1', o.x); n.setAttribute('y1', o.y);
+    n.setAttribute('x2', o.x + o.w); n.setAttribute('y2', o.y + o.h);
+    n.setAttribute('fill','none');
+    n.setAttribute('stroke', o.stroke);
+    n.setAttribute('stroke-width', Math.max(1, o.strokeWidth || 4));
+    n.setAttribute('stroke-linecap','round');
+    if (o.strokeDash) n.setAttribute('stroke-dasharray', o.strokeDash);
+    return n;
+  } else if (o.type === 'star' || o.type === 'polygon'){
+    n = document.createElementNS(NS,'polygon');
+    n.setAttribute('points', o.type === 'star'
+      ? polygonPoints(o, clamp(o.starPoints || 5, 3, 40), clamp(o.starInner || .5, .05, .95))
+      : polygonPoints(o, clamp(o.polygonSides || 6, 3, 40), 0));
+  } else if (o.type === 'path'){
+    n = document.createElementNS(NS,'polyline');
+    n.setAttribute('points', (o.points || []).map(p => p[0] + ',' + p[1]).join(' '));
+    n.setAttribute('fill','none');
+    n.setAttribute('stroke', o.stroke);
+    n.setAttribute('stroke-width', Math.max(0.5, o.strokeWidth || 6));
+    n.setAttribute('stroke-linecap','round');
+    n.setAttribute('stroke-linejoin','round');
+    return n;
+  } else if (o.type === 'text'){
+    n = document.createElementNS(NS,'text');
+    const size = o.fontSize || 64;
+    const lh = size * (o.lineHeight || 1.2);
+    const lines = String(o.text || '').split('\n');
+    const b = bounds(o);
+    const anchor = o.textAlign || 'start';
+    const tx = anchor === 'middle' ? b.x + b.w/2 : anchor === 'end' ? b.x + b.w : b.x;
+    n.setAttribute('x', tx);
+    n.setAttribute('y', o.y + size * 0.82);
+    n.setAttribute('text-anchor', anchor);
+    n.setAttribute('fill', fill);
+    n.setAttribute('font-size', size);
+    n.setAttribute('font-family', o.fontFamily || 'Arial');
+    n.setAttribute('font-weight', o.fontWeight || '700');
+    if (o.letterSpacing) n.setAttribute('letter-spacing', o.letterSpacing);
+    lines.forEach((line, i) => {
+      const tspan = document.createElementNS(NS,'tspan');
+      tspan.setAttribute('x', tx);
+      tspan.setAttribute('dy', i === 0 ? 0 : lh);
+      tspan.textContent = line || ' ';
+      n.appendChild(tspan);
+    });
+    return n;
+  } else if (o.type === 'image'){
+    n = document.createElementNS(NS,'image');
+    n.setAttribute('x', o.x); n.setAttribute('y', o.y);
+    n.setAttribute('width', Math.max(1, o.w)); n.setAttribute('height', Math.max(1, o.h));
+    n.setAttribute('preserveAspectRatio','xMidYMid meet');
+    n.setAttribute('href', o.href || '');
+    n.setAttributeNS(XLINK, 'xlink:href', o.href || '');
+    return n;
+  }
+  if (!n) return null;
+  n.setAttribute('fill', fill);
+  n.setAttribute('stroke', stroke);
+  n.setAttribute('stroke-width', o.strokeWidth || 0);
+  n.setAttribute('stroke-linejoin','round');
+  if (o.strokeDash) n.setAttribute('stroke-dasharray', o.strokeDash);
+  return n;
+}
+
+function buildNode(o, opts){
+  opts = opts || {};
+  const g = document.createElementNS(NS,'g');
+  if (!opts.ghost) g.dataset.id = o.id;
+  applyGroupTransform(g, o);
+  g.setAttribute('opacity', opts.ghost ? 0.16 : (o.opacity === undefined ? 1 : o.opacity));
+  if (o.blend && o.blend !== 'normal' && !opts.ghost) g.style.mixBlendMode = o.blend;
+  if (!o.visible && !opts.ghost) g.setAttribute('display','none');
+  if (opts.ghost){
+    g.style.filter = 'grayscale(1)';
+    g.setAttribute('pointer-events','none');
+  }
+
+  const defs = document.createElementNS(NS,'defs');
+  let fill = o.fillMode === 'none' ? 'none' : o.fill;
+  if (o.fillMode === 'gradient'){
+    const gid = 'vecta-grad-' + (++defSeq);
+    defs.appendChild(buildGradientDef(o, gid));
+    fill = `url(#${gid})`;
+  }
+  const filterId = 'vecta-filter-' + (++defSeq);
+  const filter = buildFilterDef(o, filterId);
+  if (filter){
+    defs.appendChild(filter);
+    g.setAttribute('filter', `url(#${filterId})`);
+  }
+  if (defs.childNodes.length) g.appendChild(defs);
+
+  const shape = buildShape(o, fill);
+  if (shape) g.appendChild(shape);
+  return g;
+}
+
+function syncNode(o){
+  const old = $id('content').querySelector(`[data-id="${o.id}"]`);
+  const node = buildNode(o);
+  if (old && old.parentNode) old.replaceWith(node);
+  else $id('content').appendChild(node);
+}
+
+function renderScene(){
+  const content = $id('content');
+  content.replaceChildren();
+  for (const o of objects) content.appendChild(buildNode(o));
+
+  const onion = $id('onion');
+  onion.replaceChildren();
+  if (settings.onion){
+    const sel = selectedObjects().filter(o => (keyframes[o.id] || []).length);
+    if (sel.length){
+      const cur = timeline.frame;
+      const ghostFrames = new Set();
+      for (const o of sel){
+        const ks = keyframes[o.id];
+        const prev = [...ks].reverse().find(k => k.frame < cur);
+        const next = ks.find(k => k.frame > cur);
+        if (prev) ghostFrames.add(prev.frame);
+        if (next) ghostFrames.add(next.frame);
+      }
+      for (const f of ghostFrames){
+        applyAnimations(f);
+        for (const o of sel) onion.appendChild(buildNode(o, { ghost:true }));
+      }
+      applyAnimations(cur);
+    }
+  }
+
+  drawOverlay();
+  $id('emptyHint').style.display = objects.length ? 'none' : '';
+}
+
+/* ------------------------------------------------------------------ */
+/*  Selection overlay                                                 */
+/* ------------------------------------------------------------------ */
+function objectCorners(o){
+  const b = bounds(o);
+  const cx = o.x + (o.w || 0) / 2;
+  const cy = o.y + (o.h || 0) / 2;
+  const sx = o.scaleX || 1, sy = o.scaleY || 1;
+  const rad = (o.rotation || 0) * Math.PI / 180;
+  const pts = [[b.x, b.y],[b.x + b.w, b.y],[b.x + b.w, b.y + b.h],[b.x, b.y + b.h]];
+  return pts.map(([x,y]) => {
+    const dx = (x - cx) * sx, dy = (y - cy) * sy;
+    const rx = dx * Math.cos(rad) - dy * Math.sin(rad);
+    const ry = dx * Math.sin(rad) + dy * Math.cos(rad);
+    return [cx + rx, cy + ry];
+  });
+}
+
+function edgePoints(o){
+  const c = objectCorners(o);
+  const mid = (a,b) => [(a[0]+b[0])/2, (a[1]+b[1])/2];
+  return [c[0], mid(c[0],c[1]), c[1], mid(c[1],c[2]), c[2], mid(c[2],c[3]), c[3], mid(c[3],c[0])];
+}
+
+function drawOverlay(){
+  const g = $id('overlay');
+  g.replaceChildren();
+  const selected = selectedObjects();
+
+  if (marqueeRect){
+    const r = document.createElementNS(NS,'rect');
+    r.setAttribute('x', marqueeRect.x);
+    r.setAttribute('y', marqueeRect.y);
+    r.setAttribute('width', marqueeRect.w);
+    r.setAttribute('height', marqueeRect.h);
+    r.setAttribute('fill', 'rgba(139,123,255,.12)');
+    r.setAttribute('stroke', '#8b7bff');
+    r.setAttribute('stroke-width', 1.5 / zoom);
+    r.setAttribute('stroke-dasharray', `${5/zoom} ${4/zoom}`);
+    r.setAttribute('pointer-events','none');
+    g.appendChild(r);
+  }
+
+  for (const o of selected){
+    const corners = objectCorners(o);
+    const poly = document.createElementNS(NS,'polygon');
+    poly.setAttribute('points', corners.map(p => p.join(',')).join(' '));
+    poly.setAttribute('fill','none');
+    poly.setAttribute('stroke', isSelected(o.id) ? '#8b7bff' : '#5f6c8c');
+    poly.setAttribute('stroke-width', 2 / zoom);
+    poly.setAttribute('stroke-dasharray', `${6/zoom} ${4/zoom}`);
+    poly.setAttribute('pointer-events','none');
+    g.appendChild(poly);
+  }
+
+  for (const guide of snapGuides){
+    const line = document.createElementNS(NS,'line');
+    if (guide.axis === 'x'){
+      line.setAttribute('x1', guide.value); line.setAttribute('y1', 0);
+      line.setAttribute('x2', guide.value); line.setAttribute('y2', canvasH);
+    } else {
+      line.setAttribute('x1', 0); line.setAttribute('y1', guide.value);
+      line.setAttribute('x2', canvasW); line.setAttribute('y2', guide.value);
+    }
+    line.setAttribute('stroke', '#43d9c0');
+    line.setAttribute('stroke-width', 1.5 / zoom);
+    line.setAttribute('stroke-dasharray', `${5/zoom} ${5/zoom}`);
+    line.setAttribute('pointer-events','none');
+    g.appendChild(line);
+  }
+
+  if (selected.length !== 1 || tool !== 'select') return;
+  const o = selected[0];
+  if (o.type === 'text') return;
+
+  const corners = objectCorners(o);
+  const edges = edgePoints(o);
+  const cursors = ['nwse-resize','ns-resize','nesw-resize','ew-resize','nwse-resize','ns-resize','nesw-resize','ew-resize'];
+  edges.forEach((p, i) => {
+    const h = document.createElementNS(NS,'rect');
+    h.setAttribute('x', p[0] - 4.5/zoom);
+    h.setAttribute('y', p[1] - 4.5/zoom);
+    h.setAttribute('width', 9/zoom);
+    h.setAttribute('height', 9/zoom);
+    h.setAttribute('fill','#fff');
+    h.setAttribute('stroke','#8b7bff');
+    h.setAttribute('stroke-width', 1.6/zoom);
+    h.dataset.handle = i;
+    h.style.cursor = cursors[i];
+    h.addEventListener('pointerdown', ev => beginResize(ev, i));
+    g.appendChild(h);
+  });
+
+  // rotation handle
+  const top = [(corners[0][0] + corners[1][0])/2, (corners[0][1] + corners[1][1])/2];
+  const cx = o.x + (o.w || 0)/2;
+  const cy = o.y + (o.h || 0)/2;
+  let vx = top[0] - cx, vy = top[1] - cy;
+  const len = Math.hypot(vx, vy) || 1;
+  vx /= len; vy /= len;
+  const rp = [top[0] + vx * 30/zoom, top[1] + vy * 30/zoom];
+  const line = document.createElementNS(NS,'line');
+  line.setAttribute('x1', top[0]); line.setAttribute('y1', top[1]);
+  line.setAttribute('x2', rp[0]); line.setAttribute('y2', rp[1]);
+  line.setAttribute('stroke','#8b7bff'); line.setAttribute('stroke-width', 1.4/zoom);
+  line.setAttribute('pointer-events','none');
+  g.appendChild(line);
+  const rot = document.createElementNS(NS,'circle');
+  rot.setAttribute('cx', rp[0]); rot.setAttribute('cy', rp[1]);
+  rot.setAttribute('r', 6/zoom);
+  rot.setAttribute('fill','#141821');
+  rot.setAttribute('stroke','#8b7bff');
+  rot.setAttribute('stroke-width', 2/zoom);
+  rot.style.cursor = 'grab';
+  rot.addEventListener('pointerdown', beginRotate);
+  g.appendChild(rot);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Coordinate helpers                                                */
+/* ------------------------------------------------------------------ */
+function screenToSvg(e){
+  const svg = $id('svg');
+  const pt = svg.createSVGPoint();
+  pt.x = e.clientX; pt.y = e.clientY;
+  const ctm = svg.getScreenCTM();
+  if (!ctm) return {x:0,y:0};
+  const p = pt.matrixTransform(ctm.inverse());
+  return {x:p.x, y:p.y};
+}
+
+function worldToLocal(orig, center, p){
+  const dx = p.x - center.x, dy = p.y - center.y;
+  const rad = -(orig.rotation || 0) * Math.PI / 180;
+  const rx = dx * Math.cos(rad) - dy * Math.sin(rad);
+  const ry = dx * Math.sin(rad) + dy * Math.cos(rad);
+  const sx = orig.scaleX || 1, sy = orig.scaleY || 1;
+  return { x: center.x + rx / sx, y: center.y + ry / sy };
+}
+
+/* ------------------------------------------------------------------ */
+/*  Selection                                                         */
+/* ------------------------------------------------------------------ */
+function setSelection(ids){
+  const valid = ids.filter((id, i, arr) => objects.some(o => o.id === id) && arr.indexOf(id) === i);
+  selectedIds = valid;
+  drawOverlay();
+  buildLayers();
+  buildTimeline();
+  syncInspector();
+  buildKeyframeList();
+  updateStatus();
+}
+
+function selectObject(id, additive){
+  if (id === null || id === undefined){ setSelection([]); return; }
+  if (additive){
+    if (isSelected(id)) setSelection(selectedIds.filter(x => x !== id));
+    else setSelection(selectedIds.concat(id));
+  } else {
+    setSelection([id]);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Pointer interactions                                              */
+/* ------------------------------------------------------------------ */
+function selectableAt(target){
+  const el = target.closest && target.closest('[data-id]');
+  if (!el) return null;
+  const o = objects.find(x => x.id === Number(el.dataset.id));
+  return o && !o.locked ? o : null;
+}
+
+function beginMove(e, o){
+  beginEdit();
+  const origs = selectedObjects().map(deep);
+  gesture = {
+    kind: 'move',
+    id: o.id,
+    start: screenToSvg(e),
+    origs
+  };
+}
+
+function beginResize(e, handle){
+  const o = getSelected();
+  if (!o || o.locked) return;
+  e.preventDefault();
+  e.stopPropagation();
+  beginEdit();
+  const b = bounds(o);
+  gesture = {
+    kind: 'resize',
+    id: o.id,
+    handle,
+    orig: deep(o),
+    center: { x: o.x + (o.w || 0)/2, y: o.y + (o.h || 0)/2 },
+    bbox: b
+  };
+}
+
+function beginRotate(e){
+  const o = getSelected();
+  if (!o || o.locked) return;
+  e.preventDefault();
+  e.stopPropagation();
+  beginEdit();
+  const p = screenToSvg(e);
+  const cx = o.x + (o.w || 0)/2, cy = o.y + (o.h || 0)/2;
+  gesture = {
+    kind: 'rotate',
+    id: o.id,
+    orig: deep(o),
+    center: { x:cx, y:cy },
+    startAngle: Math.atan2(p.y - cy, p.x - cx)
+  };
+}
+
+function startCreate(type, p){
+  beginEdit();
+  const o = makeObject(type, p.x, p.y);
+  if (type === 'rect' || type === 'ellipse' || type === 'star' || type === 'polygon'){ o.w = 1; o.h = 1; }
+  if (type === 'line'){ o.w = 1; o.h = 0; o.strokeWidth = 5; o.stroke = o.fill; }
+  if (type === 'star'){ o.fill = '#ffd166'; o.stroke = '#5a4211'; o.strokeWidth = 0; }
+  if (type === 'polygon'){ o.fill = '#43d9c0'; o.stroke = '#133b37'; o.strokeWidth = 0; }
+  objects.push(o);
+  selectedIds = [o.id];
+  gesture = { kind: 'create', id: o.id, type, start: p };
+  renderAll();
+}
+
+function startBrush(p){
+  beginEdit();
+  const o = makeObject('path', p.x, p.y);
+  o.points = [[p.x, p.y]];
+  o.w = 1; o.h = 1;
+  o.strokeWidth = 8;
+  o.stroke = o.fill;
+  objects.push(o);
+  selectedIds = [o.id];
+  gesture = { kind: 'brush', id: o.id, last: p };
+  renderAll();
+}
+
+function startText(p){
+  beginEdit();
+  const o = makeObject('text', p.x, p.y);
+  o.text = 'Text';
+  o.fontSize = 72;
+  o.fill = '#242034';
+  o.shadow.enabled = false;
+  measureTextObject(o);
+  objects.push(o);
+  selectedIds = [o.id];
+  renderAll();
+  commitEdit();
+  setTimeout(()=>{
+    const input = $id('propText');
+    if (input){
+      input.focus();
+      input.select();
+    }
+  }, 60);
+}
+
+function computeSnap(orig, dx, dy){
+  const th = 8 / zoom;
+  const b = bounds(orig);
+  const moved = { x:b.x + dx, y:b.y + dy, w:b.w, h:b.h };
+  const xs = [0, canvasW/2, canvasW];
+  const ys = [0, canvasH/2, canvasH];
+  for (const o of objects){
+    if (!o.visible) continue;
+    if (selectedIds.includes(o.id)) continue;
+    const ob = bounds(o);
+    xs.push(ob.x, ob.x + ob.w/2, ob.x + ob.w);
+    ys.push(ob.y, ob.y + ob.h/2, ob.y + ob.h);
+  }
+  const edgesX = [moved.x, moved.x + moved.w/2, moved.x + moved.w];
+  const edgesY = [moved.y, moved.y + moved.h/2, moved.y + moved.h];
+  let bestX = null, bestY = null;
+  for (const edge of edgesX){
+    for (const tx of xs){
+      const d = tx - edge;
+      if (Math.abs(d) <= th && (!bestX || Math.abs(d) < Math.abs(bestX.d))) bestX = { d, target: tx };
+    }
+  }
+  for (const edge of edgesY){
+    for (const ty of ys){
+      const d = ty - edge;
+      if (Math.abs(d) <= th && (!bestY || Math.abs(d) < Math.abs(bestY.d))) bestY = { d, target: ty };
+    }
+  }
+  const guides = [];
+  if (bestX) guides.push({ axis:'x', value:bestX.target });
+  if (bestY) guides.push({ axis:'y', value:bestY.target });
+  return { dx: bestX ? bestX.d : 0, dy: bestY ? bestY.d : 0, guides };
+}
+
+function refreshLive(list){
+  for (const o of list){
+    if (timeline.autoKey && keyframes[o.id] && keyframes[o.id].length){
+      upsertKeyframe(o, timeline.frame);
+    }
+    syncNode(o);
+  }
+  drawOverlay();
+  updateStatus();
+}
+
+function onPointerMove(e){
+  if (!gesture){
+    const stage = $id('stage');
+    if (stage.contains(e.target)){
+      const p = screenToSvg(e);
+      $id('pointerReadout').textContent = `X ${Math.round(p.x)} · Y ${Math.round(p.y)}`;
+    }
+    return;
+  }
+
+  if (gesture.kind === 'pan'){
+    const stage = $id('stage');
+    stage.scrollLeft = gesture.sl - (e.clientX - gesture.cx);
+    stage.scrollTop = gesture.st - (e.clientY - gesture.cy);
+    return;
+  }
+
+  if (gesture.kind === 'scrub'){
+    seek(frameFromEvent(e), true);
+    return;
+  }
+
+  if (gesture.kind === 'kfdrag'){
+    const delta = Math.round((e.clientX - gesture.startX) / pxPerFrame);
+    const nf = clamp(gesture.startFrame + delta, 0, totalFrames());
+    if (gesture.kf.frame !== nf){
+      gesture.kf.frame = nf;
+      buildTimeline();
+    }
+    return;
+  }
+
+  if (gesture.kind === 'marquee'){
+    const p = screenToSvg(e);
+    gesture.cur = p;
+    marqueeRect = {
+      x: Math.min(gesture.start.x, p.x),
+      y: Math.min(gesture.start.y, p.y),
+      w: Math.abs(p.x - gesture.start.x),
+      h: Math.abs(p.y - gesture.start.y)
+    };
+    drawOverlay();
+    return;
+  }
+
+  const o = objects.find(x => x.id === gesture.id);
+  if (!o) return;
+  const p = screenToSvg(e);
+
+  if (gesture.kind === 'move'){
+    let dx = p.x - gesture.start.x;
+    let dy = p.y - gesture.start.y;
+    if (e.shiftKey){
+      if (Math.abs(dx) > Math.abs(dy)) dy = 0; else dx = 0;
+    }
+    const union = unionBounds(gesture.origs) || bounds(o);
+    if (settings.snap && !e.altKey){
+      const s = computeSnap(union, dx, dy);
+      dx += s.dx; dy += s.dy;
+      snapGuides = s.guides;
+    } else {
+      snapGuides = [];
+    }
+    for (const orig of gesture.origs){
+      const obj = objects.find(x => x.id === orig.id);
+      if (!obj) continue;
+      obj.x = orig.x + dx;
+      obj.y = orig.y + dy;
+      if (obj.type === 'path' && orig.points){
+        obj.points = orig.points.map(([x,y]) => [x + dx, y + dy]);
+      }
+    }
+    refreshLive(gesture.origs.map(orig => objects.find(x => x.id === orig.id)).filter(Boolean));
+    return;
+  }
+
+  if (gesture.kind === 'rotate'){
+    const ang = Math.atan2(p.y - gesture.center.y, p.x - gesture.center.x);
+    let deg = gesture.orig.rotation + (ang - gesture.startAngle) * 180 / Math.PI;
+    if (e.shiftKey) deg = Math.round(deg / 15) * 15;
+    o.rotation = deg;
+    refreshLive([o]);
+    return;
+  }
+
+  if (gesture.kind === 'resize'){
+    const orig = gesture.orig;
+    const B = gesture.bbox;
+    const L = worldToLocal(orig, gesture.center, p);
+    const h = gesture.handle;
+    let x1 = B.x, y1 = B.y, x2 = B.x + B.w, y2 = B.y + B.h;
+    if ([0,6,7].includes(h)) x1 = Math.min(L.x, x2 - 4);
+    if ([2,3,4].includes(h)) x2 = Math.max(L.x, x1 + 4);
+    if ([0,1,2].includes(h)) y1 = Math.min(L.y, y2 - 4);
+    if ([4,5,6].includes(h)) y2 = Math.max(L.y, y1 + 4);
+    let nw = x2 - x1, nh = y2 - y1;
+
+    if (e.shiftKey && [0,2,4,6].includes(h) && B.w > 0 && B.h > 0){
+      const scale = Math.max(nw / B.w, nh / B.h);
+      nw = B.w * scale; nh = B.h * scale;
+      if ([0,6,7].includes(h)) x1 = x2 - nw;
+      if ([0,1,2].includes(h)) y1 = y2 - nh;
+    }
+
+    const nx = x1, ny = y1;
+    if (o.type === 'text'){
+      const scale = nh / Math.max(1, B.h);
+      o.fontSize = clamp(Math.round(orig.fontSize * scale), 4, 500);
+      o.x = nx; o.y = ny;
+      measureTextObject(o);
+    } else if (o.type === 'path' && orig.points){
+      const sx = nw / Math.max(1, B.w);
+      const sy = nh / Math.max(1, B.h);
+      o.points = orig.points.map(([x,y]) => [nx + (x - B.x) * sx, ny + (y - B.y) * sy]);
+      o.x = nx; o.y = ny; o.w = nw; o.h = nh;
+    } else if (o.type === 'line'){
+      const sx = nw / Math.max(1, B.w);
+      const sy = nh / Math.max(1, B.h);
+      o.x = nx + (orig.x - B.x) * sx;
+      o.y = ny + (orig.y - B.y) * sy;
+      o.w = orig.w * sx;
+      o.h = orig.h * sy;
+    } else {
+      o.x = nx; o.y = ny; o.w = nw; o.h = nh;
+    }
+    refreshLive([o]);
+    return;
+  }
+
+  if (gesture.kind === 'create'){
+    const s = gesture.start;
+    if (o.type === 'line'){
+      o.x = s.x; o.y = s.y;
+      o.w = p.x - s.x; o.h = p.y - s.y;
+      if (e.shiftKey){
+        const ang = Math.atan2(o.h, o.w);
+        const snapAng = Math.round(ang / (Math.PI/4)) * (Math.PI/4);
+        const len = Math.hypot(o.w, o.h);
+        o.w = Math.cos(snapAng) * len;
+        o.h = Math.sin(snapAng) * len;
+      }
+    } else {
+      let x = Math.min(s.x, p.x), y = Math.min(s.y, p.y);
+      let w = Math.abs(p.x - s.x), h = Math.abs(p.y - s.y);
+      if (e.shiftKey){
+        const d = Math.max(w, h);
+        w = d; h = d;
+        if (p.x < s.x) x = s.x - d;
+        if (p.y < s.y) y = s.y - d;
+      }
+      o.x = x; o.y = y; o.w = w; o.h = h;
+    }
+    syncNode(o);
+    drawOverlay();
+    return;
+  }
+
+  if (gesture.kind === 'brush'){
+    const pts = o.points;
+    const last = pts[pts.length - 1];
+    if (!last || Math.hypot(p.x - last[0], p.y - last[1]) > 1.5){
+      pts.push([p.x, p.y]);
+      const xs = pts.map(q => q[0]);
+      const ys = pts.map(q => q[1]);
+      o.x = Math.min(...xs);
+      o.y = Math.min(...ys);
+      o.w = Math.max(...xs) - o.x;
+      o.h = Math.max(...ys) - o.y;
+      syncNode(o);
+      drawOverlay();
+    }
+    return;
+  }
+}
+
+function onPointerUp(e){
+  if (!gesture) return;
+  const g = gesture;
+
+  if (g.kind === 'scrub'){
+    gesture = null;
+    syncInspector();
+    buildKeyframeList();
+    return;
+  }
+
+  if (g.kind === 'pan'){
+    gesture = null;
+    return;
+  }
+
+  if (g.kind === 'marquee'){
+    const r = marqueeRect;
+    gesture = null;
+    marqueeRect = null;
+    if (!r || (r.w * zoom < 4 && r.h * zoom < 4)){
+      if (!g.additive) setSelection([]);
+      drawOverlay();
+      return;
+    }
+    const ids = objects.filter(o => o.visible && !o.locked && rectsIntersect(bounds(o), r)).map(o => o.id);
+    if (g.additive){
+      const union = selectedIds.slice();
+      for (const id of ids) if (!union.includes(id)) union.push(id);
+      setSelection(union);
+    } else {
+      setSelection(ids);
+    }
+    drawOverlay();
+    return;
+  }
+
+  if (g.kind === 'kfdrag'){
+    const ks = keyframes[g.oid] || [];
+    ks.sort((a,b) => a.frame - b.frame);
+    gesture = null;
+    commitEdit();
+    applyAnimations(timeline.frame);
+    renderAll();
+    return;
+  }
+
+  if (g.kind === 'create' || g.kind === 'brush'){
+    const o = objects.find(x => x.id === g.id);
+    if (o){
+      if (g.kind === 'create'){
+        if (o.type === 'line'){
+          if (Math.abs(o.w) < 4 && Math.abs(o.h) < 4){
+            o.x = g.start.x; o.y = g.start.y; o.w = 240; o.h = 0;
+          }
+        } else if (o.w < 4 && o.h < 4){
+          const d = o.type === 'ellipse' ? 160 : o.type === 'star' ? 180 : o.type === 'polygon' ? 170 : 220;
+          o.x = g.start.x - d/2;
+          o.y = g.start.y - (o.type === 'ellipse' || o.type === 'star' || o.type === 'polygon' ? d/2 : 70);
+          o.w = d;
+          o.h = o.type === 'ellipse' ? d : o.type === 'star' || o.type === 'polygon' ? d : 140;
+        }
+      }
+      if (g.kind === 'brush' && o.points && o.points.length < 2){
+        o.points.push([o.points[0][0] + 2, o.points[0][1] + 2]);
+      }
+      if (o.type === 'path' && o.points && o.points.length){
+        const xs = o.points.map(q => q[0]);
+        const ys = o.points.map(q => q[1]);
+        o.x = Math.min(...xs); o.y = Math.min(...ys);
+        o.w = Math.max(...xs) - o.x; o.h = Math.max(...ys) - o.y;
+      }
+    }
+    gesture = null;
+    snapGuides = [];
+    commitEdit();
+    renderAll();
+    setTool('select');
+    return;
+  }
+
+  if (g.kind === 'move' || g.kind === 'resize' || g.kind === 'rotate'){
+    gesture = null;
+    snapGuides = [];
+    commitEdit();
+    renderAll();
+    return;
+  }
+
+  gesture = null;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Animation                                                        */
+/* ------------------------------------------------------------------ */
+function captureKey(o, frame){
+  return {
+    frame,
+    x: o.x, y: o.y, w: o.w, h: o.h,
+    rotation: o.rotation, scaleX: o.scaleX, scaleY: o.scaleY,
+    opacity: o.opacity, fill: o.fill, gradFrom: o.gradFrom, gradTo: o.gradTo, stroke: o.stroke,
+    easing: 'linear'
+  };
+}
+
+function upsertKeyframe(o, frame, easing){
+  const list = keyframes[o.id] || (keyframes[o.id] = []);
+  const existing = list.find(k => k.frame === frame);
+  const data = captureKey(o, frame);
+  if (existing){
+    const ease = existing.easing || 'linear';
+    Object.assign(existing, data, { easing: ease });
+  } else {
+    data.easing = easing || 'linear';
+    list.push(data);
+    list.sort((a,b) => a.frame - b.frame);
+  }
+}
+
+function applyAnimations(frame){
+  for (const o of objects){
+    const ks = keyframes[o.id];
+    if (!ks || !ks.length) continue;
+
+    let a = ks[0], b = ks[0];
+    if (frame <= ks[0].frame){
+      a = b = ks[0];
+    } else if (frame >= ks[ks.length - 1].frame){
+      a = b = ks[ks.length - 1];
+    } else {
+      for (let i = 0; i < ks.length - 1; i++){
+        if (frame >= ks[i].frame && frame <= ks[i+1].frame){
+          a = ks[i]; b = ks[i+1];
+          break;
+        }
+      }
+    }
+
+    const span = b.frame - a.frame;
+    const t = span <= 0 ? 0 : (frame - a.frame) / span;
+    const ease = EASINGS[a.easing] || EASINGS.linear;
+    const e = ease(t);
+
+    for (const prop of ANIM_PROPS){
+      if (a[prop] !== undefined && b[prop] !== undefined){
+        o[prop] = a[prop] + (b[prop] - a[prop]) * e;
+      }
+    }
+    for (const prop of ANIM_COLORS){
+      if (a[prop] && b[prop]) o[prop] = lerpColor(a[prop], b[prop], e);
+    }
+  }
+}
+
+function seek(frame, silent){
+  timeline.frame = clamp(Math.round(frame), 0, totalFrames());
+  applyAnimations(timeline.frame);
+  renderScene();
+  updatePlayhead();
+  updateStatus();
+  if (!silent){
+    syncInspector();
+    buildKeyframeList();
+  }
+}
+
+function updatePlayhead(){
+  const ph = $id('playhead');
+  ph.style.left = (timeline.frame * pxPerFrame) + 'px';
+  ph.style.height = (27 + objects.length * 28) + 'px';
+  $id('tlTime').textContent = `Frame ${timeline.frame} · ${(timeline.frame / timeline.fps).toFixed(2)}s`;
+  $id('frameStatus').textContent = `Frame ${timeline.frame}`;
+}
+
+function playToggle(){
+  if (playing){ stopPlayback(); return; }
+  if (totalFrames() <= 0) return;
+  if (previewPlaying) stopPreview();
+  playing = true;
+  playDir = 1;
+  playStartFrame = timeline.frame >= totalFrames() ? 0 : timeline.frame;
+  playStartTime = performance.now();
+  updatePlayButtons();
+
+  const tick = (now) => {
+    if (!playing) return;
+    const elapsed = (now - playStartTime) / 1000;
+    let f = playStartFrame + elapsed * timeline.fps * playDir;
+    const total = totalFrames();
+    const mode = timeline.loop;
+
+    if (f > total){
+      if (mode === 'once'){
+        f = total; playing = false;
+      } else if (mode === 'pingpong'){
+        f = total; playDir = -1; playStartFrame = total; playStartTime = now;
+      } else {
+        playStartFrame = 0; playStartTime = now;
+        f = (f - total) % total;
+      }
+    } else if (f < 0){
+      if (mode === 'pingpong'){
+        f = 0; playDir = 1; playStartFrame = 0; playStartTime = now;
+      } else {
+        f = 0; playing = false;
+      }
+    }
+
+    const nf = Math.round(f);
+    if (nf !== timeline.frame || !playing){
+      timeline.frame = clamp(nf, 0, totalFrames());
+      applyAnimations(timeline.frame);
+      renderScene();
+      updatePlayhead();
+      updateStatus();
+    }
+    if (playing) rafId = requestAnimationFrame(tick);
+    else updatePlayButtons();
+  };
+  rafId = requestAnimationFrame(tick);
+}
+
+function stopPlayback(reset){
+  playing = false;
+  cancelAnimationFrame(rafId);
+  updatePlayButtons();
+  if (reset) seek(0);
+}
+
+function updatePlayButtons(){
+  const label = playing ? '⏸' : '▶';
+  $id('tlPlay').textContent = label;
+  $id('playTopBtn').textContent = playing ? '⏸ Pause' : '▶ Play';
+}
+
+/* ------------------------------------------------------------------ */
+/*  Timeline UI                                                       */
+/* ------------------------------------------------------------------ */
+function frameFromEvent(e){
+  const rect = $id('timelineCanvas').getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  return clamp(Math.round(x / pxPerFrame), 0, totalFrames());
+}
+
+function buildTimeline(){
+  const total = totalFrames();
+  const width = Math.max($id('tracksScroll').clientWidth - 4, total * pxPerFrame + 100);
+  $id('timelineCanvas').style.width = width + 'px';
+
+  const ruler = $id('ruler');
+  ruler.replaceChildren();
+  ruler.style.backgroundSize = (pxPerFrame * timeline.fps) + 'px 100%';
+  const secondPx = pxPerFrame * timeline.fps;
+  const secStep = secondPx >= 100 ? 1 : secondPx >= 55 ? 2 : secondPx >= 28 ? 5 : 10;
+  for (let s = 0; s <= timeline.duration + 0.001; s += secStep){
+    const f = Math.round(s * timeline.fps);
+    const tick = document.createElement('div');
+    tick.className = 'ruler-tick';
+    tick.style.left = (f * pxPerFrame) + 'px';
+    tick.textContent = s.toFixed(0) + 's';
+    ruler.appendChild(tick);
+  }
+  const minor = timeline.fps >= 30 ? 10 : 6;
+  for (let f = 0; f <= total; f += minor){
+    if (f % timeline.fps === 0) continue;
+    const t = document.createElement('div');
+    t.className = 'ruler-sub';
+    t.style.left = (f * pxPerFrame) + 'px';
+    ruler.appendChild(t);
+  }
+
+  const names = $id('trackNames');
+  names.replaceChildren();
+  const head = document.createElement('div');
+  head.className = 'track-head';
+  head.textContent = 'Layers';
+  names.appendChild(head);
+
+  const rows = $id('rows');
+  rows.replaceChildren();
+
+  const ordered = objects.slice().reverse();
+  for (const o of ordered){
+    const name = document.createElement('div');
+    name.className = 'track-name' + (o.id === getSelected()?.id || isSelected(o.id) ? ' selected' : '');
+    const label = document.createElement('span');
+    label.textContent = o.name || o.type;
+    const em = document.createElement('em');
+    em.textContent = (keyframes[o.id] || []).length ? '◆' + keyframes[o.id].length : TYPE_LABELS[o.type] || '';
+    name.append(label, em);
+    name.title = name.textContent;
+    name.addEventListener('click', ev => selectObject(o.id, ev.shiftKey));
+    names.appendChild(name);
+
+    const row = document.createElement('div');
+    row.className = 'track-row' + (isSelected(o.id) ? ' selected' : '');
+    row.dataset.id = o.id;
+    row.style.backgroundSize = (pxPerFrame * timeline.fps) + 'px 100%';
+
+    (keyframes[o.id] || []).forEach(k => {
+      const d = document.createElement('button');
+      d.className = 'diamond';
+      d.style.left = (k.frame * pxPerFrame - 5) + 'px';
+      d.title = 'Frame ' + k.frame + ' — drag to retime, double-click to delete';
+      d.addEventListener('pointerdown', ev => {
+        ev.stopPropagation();
+        ev.preventDefault();
+        if (ev.button !== 0) return;
+        selectObject(o.id);
+        seek(k.frame);
+        beginEdit();
+        gesture = { kind:'kfdrag', oid:o.id, kf:k, startFrame:k.frame, startX:ev.clientX };
+      });
+      d.addEventListener('dblclick', ev => {
+        ev.stopPropagation();
+        snapshot();
+        keyframes[o.id] = (keyframes[o.id] || []).filter(x => x !== k);
+        if (!keyframes[o.id].length) delete keyframes[o.id];
+        applyAnimations(timeline.frame);
+        renderAll();
+      });
+      row.appendChild(d);
+    });
+
+    row.addEventListener('pointerdown', ev => {
+      if (ev.target.classList.contains('diamond')) return;
+      selectObject(o.id, ev.shiftKey);
+    });
+    row.addEventListener('dblclick', ev => {
+      if (ev.target.classList.contains('diamond')) return;
+      const f = frameFromEvent(ev);
+      selectObject(o.id);
+      seek(f);
+      snapshot();
+      upsertKeyframe(o, f, $id('newEase').value);
+      renderAll();
+    });
+
+    rows.appendChild(row);
+  }
+
+  updatePlayhead();
+}
+
+/* ------------------------------------------------------------------ */
+/*  Layers UI                                                         */
+/* ------------------------------------------------------------------ */
+function layerColor(o){
+  if (o.fillMode === 'gradient') return o.gradFrom + '|' + o.gradTo;
+  if (o.fillMode === 'none') return '#2c3445';
+  return o.fill;
+}
+
+function buildLayers(){
+  const list = $id('layerList');
+  list.replaceChildren();
+  const ordered = objects.slice().reverse();
+
+  if (!ordered.length){
+    const p = document.createElement('p');
+    p.className = 'hint';
+    p.textContent = 'No objects yet. Draw something with the tools on the left, or load the sample scene.';
+    list.appendChild(p);
+    return;
+  }
+
+  for (const o of ordered){
+    const row = document.createElement('div');
+    row.className = 'layer' + (isSelected(o.id) ? ' selected' : '') + (o.locked ? ' locked' : '');
+    row.draggable = true;
+    row.dataset.id = o.id;
+
+    const eye = document.createElement('button');
+    eye.className = 'eye';
+    eye.title = 'Toggle visibility';
+    eye.textContent = o.visible ? '◉' : '○';
+    eye.addEventListener('click', ev => {
+      ev.stopPropagation();
+      snapshot();
+      o.visible = !o.visible;
+      renderAll();
+    });
+
+    const lock = document.createElement('button');
+    lock.className = 'lock';
+    lock.title = o.locked ? 'Unlock layer' : 'Lock layer';
+    lock.textContent = o.locked ? '🔒' : '·';
+    lock.addEventListener('click', ev => {
+      ev.stopPropagation();
+      snapshot();
+      o.locked = !o.locked;
+      if (o.locked) selectedIds = selectedIds.filter(x => x !== o.id);
+      renderAll();
+    });
+
+    const type = document.createElement('span');
+    type.className = 'type';
+    type.textContent = TYPE_LABELS[o.type] ? TYPE_LABELS[o.type][0] : '?';
+    type.style.background = layerColor(o).split('|')[0];
+
+    const name = document.createElement('span');
+    name.className = 'name';
+    name.textContent = o.name || o.type;
+    name.title = 'Double-click to rename';
+    name.addEventListener('dblclick', ev => {
+      ev.stopPropagation();
+      const v = prompt('Layer name', o.name || o.type);
+      if (v !== null && v.trim()){
+        snapshot();
+        o.name = v.trim();
+        renderAll();
+      }
+    });
+
+    const meta = document.createElement('span');
+    meta.className = 'meta';
+    meta.textContent = (keyframes[o.id] || []).length ? '◆' : '';
+
+    row.append(eye, lock, type, name, meta);
+    row.addEventListener('click', ev => selectObject(o.id, ev.shiftKey));
+    row.addEventListener('dragstart', ev => {
+      ev.dataTransfer.setData('text/plain', String(o.id));
+      ev.dataTransfer.effectAllowed = 'move';
+      row.classList.add('dragging');
+    });
+    row.addEventListener('dragend', () => row.classList.remove('dragging'));
+    row.addEventListener('dragover', ev => { ev.preventDefault(); ev.dataTransfer.dropEffect = 'move'; });
+    row.addEventListener('drop', ev => {
+      ev.preventDefault();
+      const id = Number(ev.dataTransfer.getData('text/plain'));
+      if (!id || id === o.id) return;
+      const from = objects.findIndex(x => x.id === id);
+      const to = objects.findIndex(x => x.id === o.id);
+      if (from < 0 || to < 0) return;
+      snapshot();
+      const ordered = objects.slice().reverse();
+      const fromUI = ordered.findIndex(x => x.id === id);
+      if (fromUI < 0) return;
+      const [moved] = ordered.splice(fromUI, 1);
+      const toUI = ordered.findIndex(x => x.id === o.id);
+      ordered.splice(toUI < 0 ? 0 : toUI, 0, moved);
+      objects = ordered.reverse();
+      renderAll();
+    });
+    list.appendChild(row);
+  }
+}
+
+function moveLayer(dir, toEnd){
+  const o = getSelected();
+  if (!o) return;
+  const i = objects.findIndex(x => x.id === o.id);
+  if (i < 0) return;
+  let j = toEnd ? (dir > 0 ? objects.length - 1 : 0) : i + dir;
+  j = clamp(j, 0, objects.length - 1);
+  if (j === i) return;
+  snapshot();
+  const [moved] = objects.splice(i, 1);
+  objects.splice(j, 0, moved);
+  renderAll();
+}
+
+function moveSelectionToEnd(toFront){
+  if (!selectedIds.length) return;
+  snapshot();
+  const sel = objects.filter(o => selectedIds.includes(o.id));
+  const rest = objects.filter(o => !selectedIds.includes(o.id));
+  objects = toFront ? rest.concat(sel) : sel.concat(rest);
+  renderAll();
+}
+
+/* ------------------------------------------------------------------ */
+/*  Inspector                                                         */
+/* ------------------------------------------------------------------ */
+function setValue(id, value){ const el = $id(id); if (el) el.value = value; }
+function setChecked(id, value){ const el = $id(id); if (el) el.checked = !!value; }
+
+function syncInspector(){
+  const sel = selectedObjects();
+  const o = sel.length === 1 ? sel[0] : null;
+
+  $id('objProps').hidden = !o;
+  $id('multiProps').hidden = sel.length < 2;
+  $id('canvasProps').hidden = sel.length > 0;
+  $id('multiCount').textContent = sel.length + ' objects';
+
+  const name = o ? (o.name || o.type) : sel.length > 1 ? sel.length + ' objects selected' : 'Nothing selected';
+  $id('selectedName').textContent = name;
+  const badge = $id('selectionBadge');
+  badge.hidden = sel.length < 2;
+  badge.textContent = sel.length + ' selected';
+
+  if (!o) return;
+
+  setValue('propName', o.name || '');
+  setValue('propX', Math.round(o.x));
+  setValue('propY', Math.round(o.y));
+  setValue('propW', Math.round(o.w));
+  setValue('propH', Math.round(o.h));
+  setValue('propRot', Math.round(o.rotation || 0));
+  setValue('propSX', +(o.scaleX || 1).toFixed(3));
+  setValue('propSY', +(o.scaleY || 1).toFixed(3));
+  setValue('propOpacity', Math.round((o.opacity ?? 1) * 100));
+  $id('opacityVal').textContent = Math.round((o.opacity ?? 1) * 100) + '% opacity';
+  setValue('propFill', toHex(o.fill));
+  setValue('propGradFrom', toHex(o.gradFrom));
+  setValue('propGradTo', toHex(o.gradTo));
+  setValue('propGradAngle', Math.round(o.gradAngle || 0));
+  setValue('propStroke', toHex(o.stroke));
+  setValue('propSW', o.strokeWidth || 0);
+  setValue('propDash', o.strokeDash || '');
+  setValue('propRadius', o.radius || 0);
+  setValue('propFillMode', o.fillMode || 'solid');
+  setValue('propBlur', o.blur || 0);
+  setValue('propBlend', o.blend || 'normal');
+  setChecked('propVisible', o.visible !== false);
+  setChecked('propLocked', o.locked === true);
+
+  $id('solidFillField').hidden = (o.fillMode || 'solid') !== 'solid';
+  $id('gradientFields').hidden = (o.fillMode || 'solid') !== 'gradient';
+  $id('radiusField').hidden = o.type !== 'rect';
+
+  const sh = o.shadow || {};
+  setChecked('propShadowOn', !!sh.enabled);
+  $id('shadowFields').hidden = !sh.enabled;
+  setValue('propShadowX', sh.x ?? 8);
+  setValue('propShadowY', sh.y ?? 8);
+  setValue('propShadowBlur', sh.blur ?? 14);
+  setValue('propShadowColor', toHex(sh.color || '#000000'));
+  setValue('propShadowOpacity', Math.round((sh.opacity ?? .35) * 100));
+
+  $id('textGroup').hidden = o.type !== 'text';
+  $id('shapeGroup').hidden = !['star','polygon'].includes(o.type);
+  $id('starFields').hidden = o.type !== 'star';
+  $id('polyFields').hidden = o.type !== 'polygon';
+  if (o.type === 'star'){
+    setValue('propStarPoints', o.starPoints || 5);
+    setValue('propStarInner', o.starInner ?? .5);
+    $id('shapeHint').textContent = 'Drag corner or edge handles to resize. Inner ratio controls the waist of the star.';
+  } else if (o.type === 'polygon'){
+    setValue('propPolySides', o.polygonSides || 6);
+    $id('shapeHint').textContent = 'Regular polygon uses the selection box as its radius bounds.';
+  }
+
+  if (o.type === 'text'){
+    setValue('propText', o.text || '');
+    setValue('propFontSize', o.fontSize || 64);
+    setValue('propFontFamily', o.fontFamily || 'Arial');
+    setValue('propFontWeight', o.fontWeight || '700');
+    setValue('propTextAlign', o.textAlign || 'start');
+    setValue('propLineHeight', o.lineHeight || 1.2);
+    setValue('propLetterSpacing', o.letterSpacing || 0);
+  }
+}
+
+function editNow(fn){
+  beginEdit();
+  fn();
+  commitEdit();
+}
+
+function bindNumber(id, prop, opts, after){
+  const el = $id(id);
+  if (!el) return;
+  el.addEventListener('input', () => {
+    const o = getSelected();
+    if (!o) return;
+    let v = parseFloat(el.value);
+    if (!isFinite(v)) return;
+    if (opts && opts.min !== undefined) v = Math.max(opts.min, v);
+    if (opts && opts.max !== undefined) v = Math.min(opts.max, v);
+    beginEdit();
+    if (prop === 'fontSize'){
+      o.fontSize = v;
+      measureTextObject(o);
+    } else if (prop === 'shadow.x' || prop === 'shadow.y' || prop === 'shadow.blur'){
+      o.shadow[prop.split('.')[1]] = v;
+    } else {
+      o[prop] = v;
+    }
+    if (after) after(o);
+    afterObjectEdit(o, true);
+  });
+  el.addEventListener('change', commitEdit);
+}
+
+function bindColor(id, prop){
+  const el = $id(id);
+  if (!el) return;
+  el.addEventListener('input', () => {
+    const o = getSelected();
+    if (!o) return;
+    beginEdit();
+    if (prop.startsWith('shadow.')) o.shadow[prop.split('.')[1]] = el.value;
+    else o[prop] = el.value;
+    afterObjectEdit(o, true);
+  });
+  el.addEventListener('change', commitEdit);
+}
+
+function bindInspector(){
+  // Inspector panel tabs
+  $$('.tabs .tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const key = btn.dataset.panel;
+      $$('.tabs .tab').forEach(b => {
+        const on = b === btn;
+        b.classList.toggle('active', on);
+        b.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      $$('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + key));
+    });
+    btn.setAttribute('role', 'tab');
+    btn.setAttribute('aria-selected', btn.classList.contains('active') ? 'true' : 'false');
+  });
+
+  bindNumber('propX', 'x');
+  bindNumber('propY', 'y');
+  bindNumber('propW', 'w', {min:1});
+  bindNumber('propH', 'h', {min:1});
+  bindNumber('propRot', 'rotation');
+  bindNumber('propSX', 'scaleX', {min:0.01});
+  bindNumber('propSY', 'scaleY', {min:0.01});
+  bindNumber('propSW', 'strokeWidth', {min:0});
+  bindNumber('propRadius', 'radius', {min:0});
+  bindNumber('propBlur', 'blur', {min:0, max:60});
+  bindNumber('propGradAngle', 'gradAngle');
+  bindNumber('propFontSize', 'fontSize', {min:4, max:500});
+  bindNumber('propLineHeight', 'lineHeight', {min:.8, max:3}, o => measureTextObject(o));
+  bindNumber('propLetterSpacing', 'letterSpacing', {min:-20, max:80}, o => measureTextObject(o));
+  bindNumber('propStarPoints', 'starPoints', {min:3, max:40});
+  bindNumber('propStarInner', 'starInner', {min:.05, max:.95});
+  bindNumber('propPolySides', 'polygonSides', {min:3, max:40});
+  bindNumber('propShadowX', 'shadow.x');
+  bindNumber('propShadowY', 'shadow.y');
+  bindNumber('propShadowBlur', 'shadow.blur', {min:0});
+
+  bindColor('propFill', 'fill');
+  bindColor('propStroke', 'stroke');
+  bindColor('propGradFrom', 'gradFrom');
+  bindColor('propGradTo', 'gradTo');
+  bindColor('propShadowColor', 'shadow.color');
+
+  $id('propFillMode').addEventListener('change', e => {
+    const o = getSelected(); if (!o) return;
+    editNow(()=>{ o.fillMode = e.target.value; afterObjectEdit(o, false); });
+  });
+
+  $id('propDash').addEventListener('change', e => {
+    const o = getSelected(); if (!o) return;
+    editNow(()=>{ o.strokeDash = e.target.value; afterObjectEdit(o, false); });
+  });
+
+  $id('propBlend').addEventListener('change', e => {
+    const o = getSelected(); if (!o) return;
+    editNow(()=>{ o.blend = e.target.value; afterObjectEdit(o, false); });
+  });
+
+  $id('propShadowOn').addEventListener('change', e => {
+    const o = getSelected(); if (!o) return;
+    editNow(()=>{ o.shadow.enabled = e.target.checked; afterObjectEdit(o, false); });
+    $id('shadowFields').hidden = !e.target.checked;
+  });
+
+  $id('propShadowOpacity').addEventListener('input', e => {
+    const o = getSelected(); if (!o) return;
+    beginEdit();
+    o.shadow.opacity = clamp(parseInt(e.target.value, 10) / 100, 0, 1);
+    afterObjectEdit(o, true);
+  });
+  $id('propShadowOpacity').addEventListener('change', commitEdit);
+
+  $id('propOpacity').addEventListener('input', e => {
+    const o = getSelected(); if (!o) return;
+    beginEdit();
+    o.opacity = clamp(parseInt(e.target.value, 10) / 100, 0, 1);
+    $id('opacityVal').textContent = e.target.value + '% opacity';
+    afterObjectEdit(o, true);
+  });
+  $id('propOpacity').addEventListener('change', commitEdit);
+
+  $id('propName').addEventListener('input', e => {
+    const o = getSelected(); if (!o) return;
+    beginEdit();
+    o.name = e.target.value;
+    $id('selectedName').textContent = o.name || o.type;
+    buildLayers();
+    buildTimeline();
+  });
+  $id('propName').addEventListener('change', commitEdit);
+
+  $id('propVisible').addEventListener('change', e => {
+    const o = getSelected(); if (!o) return;
+    editNow(()=>{ o.visible = e.target.checked; afterObjectEdit(o, false); });
+  });
+  $id('propLocked').addEventListener('change', e => {
+    const o = getSelected(); if (!o) return;
+    editNow(()=>{ o.locked = e.target.checked; if (o.locked) setSelection([]); else renderAll(); });
+  });
+
+  $id('propText').addEventListener('input', e => {
+    const o = getSelected(); if (!o) return;
+    beginEdit();
+    o.text = e.target.value;
+    measureTextObject(o);
+    afterObjectEdit(o, true);
+  });
+  $id('propText').addEventListener('change', commitEdit);
+
+  $id('propFontSize').addEventListener('change', commitEdit);
+
+  ['propFontFamily','propFontWeight','propTextAlign'].forEach(id => {
+    $id(id).addEventListener('change', e => {
+      const o = getSelected(); if (!o) return;
+      const prop = id === 'propFontFamily' ? 'fontFamily' : id === 'propFontWeight' ? 'fontWeight' : 'textAlign';
+      editNow(()=>{ o[prop] = e.target.value; measureTextObject(o); afterObjectEdit(o, false); });
+    });
+  });
+
+  $id('canvasWInput').addEventListener('change', applyCanvasInputs);
+  $id('canvasHInput').addEventListener('change', applyCanvasInputs);
+
+  $id('canvasPreset').addEventListener('change', e => {
+    if (e.target.value === 'custom') return;
+    const [w,h] = e.target.value.split('x').map(Number);
+    if (!w || !h) return;
+    snapshot();
+    canvasW = clamp(w, 64, 8000);
+    canvasH = clamp(h, 64, 8000);
+    applyCanvasSize();
+    fitCanvas();
+    renderAll();
+  });
+
+  ['bgColorHead','bgColor2'].forEach(id => {
+    $id(id).addEventListener('input', e => {
+      beginEdit();
+      bgColor = e.target.value;
+      $id('bgRect').setAttribute('fill', bgColor);
+      $id('bgColorHead').value = bgColor;
+      $id('bgColor2').value = bgColor;
+      markUnsaved();
+    });
+    $id(id).addEventListener('change', commitEdit);
+  });
+
+  $id('dupBtn2').addEventListener('click', duplicateSelected);
+  $id('delBtn2').addEventListener('click', deleteSelected);
+  $id('frontBtn').addEventListener('click', () => moveLayer(1, false));
+  $id('backBtn').addEventListener('click', () => moveLayer(-1, false));
+  $id('frontAllBtn').addEventListener('click', () => moveLayer(1, true));
+  $id('backAllBtn').addEventListener('click', () => moveLayer(-1, true));
+
+  $id('layerUpBtn').addEventListener('click', () => moveLayer(1, false));
+  $id('layerDownBtn').addEventListener('click', () => moveLayer(-1, false));
+
+  $id('multiDupBtn').addEventListener('click', duplicateSelected);
+  $id('multiDelBtn').addEventListener('click', deleteSelected);
+  $id('multiGroupFront').addEventListener('click', () => moveSelectionToEnd(true));
+  $id('multiGroupBack').addEventListener('click', () => moveSelectionToEnd(false));
+
+  $$('#alignGrid button').forEach(btn => {
+    btn.addEventListener('click', () => alignSelection(btn.dataset.align));
+  });
+  $$('[data-distribute]').forEach(btn => {
+    btn.addEventListener('click', () => distributeSelection(btn.dataset.distribute));
+  });
+
+  $id('addShapeBtn').addEventListener('click', () => {
+    snapshot();
+    const o = makeObject('rect', canvasW * 0.35, canvasH * 0.35);
+    o.w = 320; o.h = 200;
+    objects.push(o);
+    selectedIds = [o.id];
+    renderAll();
+    setTool('select');
+  });
+}
+
+function applyCanvasInputs(){
+  const w = clamp(parseInt($id('canvasWInput').value, 10) || 1920, 64, 8000);
+  const h = clamp(parseInt($id('canvasHInput').value, 10) || 1080, 64, 8000);
+  if (w === canvasW && h === canvasH) return;
+  snapshot();
+  canvasW = w; canvasH = h;
+  applyCanvasSize();
+  fitCanvas();
+  renderAll();
+}
+
+function translateObject(o, dx, dy){
+  o.x += dx; o.y += dy;
+  if (o.type === 'path' && o.points){
+    o.points = o.points.map(([x,y]) => [x + dx, y + dy]);
+  }
+}
+
+function alignSelection(mode){
+  const sel = selectedObjects();
+  if (sel.length < 2) return;
+  const u = unionBounds(sel);
+  if (!u) return;
+  snapshot();
+  for (const o of sel){
+    const b = bounds(o);
+    let dx = 0, dy = 0;
+    if (mode === 'left') dx = u.x - b.x;
+    if (mode === 'hcenter') dx = (u.x + u.w/2) - (b.x + b.w/2);
+    if (mode === 'right') dx = (u.x + u.w) - (b.x + b.w);
+    if (mode === 'top') dy = u.y - b.y;
+    if (mode === 'vcenter') dy = (u.y + u.h/2) - (b.y + b.h/2);
+    if (mode === 'bottom') dy = (u.y + u.h) - (b.y + b.h);
+    translateObject(o, dx, dy);
+    if (timeline.autoKey && keyframes[o.id] && keyframes[o.id].length) upsertKeyframe(o, timeline.frame);
+  }
+  renderAll();
+}
+
+function distributeSelection(axis){
+  const sel = selectedObjects();
+  if (sel.length < 3) { toast('Select at least three objects to distribute.'); return; }
+  snapshot();
+  const items = sel.map(o => ({ o, b: bounds(o) })).sort((a,b) => axis === 'h' ? a.b.x - b.b.x : a.b.y - b.b.y);
+  const u = unionBounds(sel);
+  const total = items.reduce((sum, it) => sum + (axis === 'h' ? it.b.w : it.b.h), 0);
+  const gap = ((axis === 'h' ? u.w : u.h) - total) / (items.length - 1);
+  let cursor = axis === 'h' ? u.x : u.y;
+  for (const it of items){
+    const cur = axis === 'h' ? it.b.x : it.b.y;
+    const d = cursor - cur;
+    translateObject(it.o, axis === 'h' ? d : 0, axis === 'h' ? 0 : d);
+    if (timeline.autoKey && keyframes[it.o.id] && keyframes[it.o.id].length) upsertKeyframe(it.o, timeline.frame);
+    cursor += (axis === 'h' ? it.b.w : it.b.h) + gap;
+  }
+  renderAll();
+}
+
+/* ------------------------------------------------------------------ */
+/*  Keyframe panel                                                    */
+/* ------------------------------------------------------------------ */
+function buildKeyframeList(){
+  const o = getSelected();
+  const list = $id('kfList');
+  list.replaceChildren();
+  $id('kfObjectName').textContent = o ? '· ' + (o.name || o.type) : '';
+
+  if (!o){
+    const p = document.createElement('p');
+    p.className = 'hint';
+    p.textContent = 'Select an object to manage its keyframes.';
+    list.appendChild(p);
+    return;
+  }
+
+  const ks = keyframes[o.id] || [];
+  if (!ks.length){
+    const p = document.createElement('p');
+    p.className = 'hint';
+    p.textContent = 'No keyframes yet. Add one at the playhead, then move the playhead and edit the object to tween.';
+    list.appendChild(p);
+    return;
+  }
+
+  ks.forEach(k => {
+    const row = document.createElement('div');
+    row.className = 'kf-row';
+
+    const go = document.createElement('button');
+    go.className = 'kf-frame';
+    go.textContent = 'Frame ' + k.frame;
+    go.title = 'Jump to this keyframe';
+    go.addEventListener('click', () => seek(k.frame));
+
+    const ease = document.createElement('select');
+    Object.keys(EASINGS).forEach(name => {
+      const opt = document.createElement('option');
+      opt.value = name;
+      opt.textContent = EASE_LABELS[name] || name;
+      if ((k.easing || 'linear') === name) opt.selected = true;
+      ease.appendChild(opt);
+    });
+    ease.addEventListener('change', () => {
+      snapshot();
+      k.easing = ease.value;
+      applyAnimations(timeline.frame);
+      renderAll();
+    });
+
+    const del = document.createElement('button');
+    del.textContent = '×';
+    del.className = 'danger';
+    del.title = 'Delete keyframe';
+    del.addEventListener('click', () => {
+      snapshot();
+      keyframes[o.id] = (keyframes[o.id] || []).filter(x => x !== k);
+      if (!keyframes[o.id].length) delete keyframes[o.id];
+      applyAnimations(timeline.frame);
+      renderAll();
+    });
+
+    row.append(go, ease, del);
+    list.appendChild(row);
+  });
+}
+
+function addKeyframeAtPlayhead(){
+  const o = getSelected();
+  if (!o){ toast('Select an object first.'); return; }
+  snapshot();
+  const easing = $id('newEase').value;
+  upsertKeyframe(o, timeline.frame, easing);
+  renderAll();
+  toast('Keyframe at frame ' + timeline.frame + '. Move the playhead and edit the object.');
+}
+
+function copyMotion(){
+  const o = getSelected();
+  if (!o || !(keyframes[o.id] || []).length){ toast('No motion to copy on this object.'); return; }
+  motionClipboard = deep(keyframes[o.id]);
+  toast('Motion copied (' + motionClipboard.length + ' keyframes).');
+}
+
+function pasteMotion(){
+  const o = getSelected();
+  if (!o){ toast('Select an object first.'); return; }
+  if (!motionClipboard || !motionClipboard.length){ toast('Copy motion from another object first.'); return; }
+  snapshot();
+  keyframes[o.id] = deep(motionClipboard);
+  applyAnimations(timeline.frame);
+  renderAll();
+  toast('Motion pasted.');
+}
+
+function reverseMotion(){
+  const o = getSelected();
+  const ks = o && keyframes[o.id];
+  if (!ks || ks.length < 2){ toast('Need at least two keyframes to reverse.'); return; }
+  const max = totalFrames();
+  snapshot();
+  keyframes[o.id] = ks.map(k => Object.assign({}, deep(k), { frame: max - k.frame }))
+    .sort((a,b) => a.frame - b.frame);
+  applyAnimations(timeline.frame);
+  renderAll();
+  toast('Motion reversed.');
+}
+
+/* ------------------------------------------------------------------ */
+/*  Delete / duplicate / clipboard                                     */
+/* ------------------------------------------------------------------ */
+function deleteSelected(){
+  if (!selectedIds.length) return;
+  snapshot();
+  const ids = selectedIds.slice();
+  objects = objects.filter(o => !ids.includes(o.id));
+  for (const id of ids) delete keyframes[id];
+  selectedIds = [];
+  renderAll();
+}
+
+function cloneSelection(offset){
+  offset = offset === undefined ? 28 : offset;
+  const sel = selectedObjects();
+  if (!sel.length) return [];
+  const map = {};
+  const newIds = [];
+  for (const o of sel){
+    const n = deep(o);
+    n.id = nextId++;
+    map[o.id] = n.id;
+    n.x += offset; n.y += offset;
+    if (n.points) n.points = n.points.map(([x,y]) => [x + offset, y + offset]);
+    n.name = (o.name || 'Object') + ' copy';
+    objects.push(n);
+    newIds.push(n.id);
+    if (keyframes[o.id] && keyframes[o.id].length){
+      keyframes[n.id] = deep(keyframes[o.id]);
+    }
+  }
+  selectedIds = newIds;
+  return newIds;
+}
+
+function duplicateSelected(skipSnapshot){
+  if (!selectedIds.length) return;
+  if (!skipSnapshot) snapshot();
+  cloneSelection(28);
+  renderAll();
+}
+
+function copySelection(){
+  if (!selectedIds.length) return;
+  const sel = selectedObjects();
+  const kf = {};
+  for (const o of sel){
+    if (keyframes[o.id]) kf[o.id] = deep(keyframes[o.id]);
+  }
+  clipboard = { objects: deep(sel), keyframes: kf };
+  toast('Copied ' + sel.length + ' object' + (sel.length === 1 ? '' : 's') + '.');
+}
+
+function pasteClipboard(){
+  if (!clipboard || !clipboard.objects.length){ toast('Clipboard is empty.'); return; }
+  snapshot();
+  const map = {};
+  const newIds = [];
+  for (const src of clipboard.objects){
+    const n = deep(src);
+    n.id = nextId++;
+    map[src.id] = n.id;
+    n.x += 32; n.y += 32;
+    if (n.points) n.points = n.points.map(([x,y]) => [x + 32, y + 32]);
+    n.name = (src.name || 'Object') + ' copy';
+    objects.push(n);
+    newIds.push(n.id);
+    const ks = clipboard.keyframes[src.id];
+    if (ks && ks.length) keyframes[n.id] = deep(ks);
+  }
+  selectedIds = newIds;
+  renderAll();
+  toast('Pasted.');
+}
+
+function selectAll(){
+  setSelection(objects.filter(o => o.visible && !o.locked).map(o => o.id));
+}
+
+function nudgeSelection(dx, dy){
+  const sel = selectedObjects();
+  if (!sel.length) return;
+  snapshot();
+  for (const o of sel){
+    translateObject(o, dx, dy);
+    if (timeline.autoKey && keyframes[o.id] && keyframes[o.id].length) upsertKeyframe(o, timeline.frame);
+  }
+  renderAll();
+}
+
+/* ------------------------------------------------------------------ */
+/*  State load                                                        */
+/* ------------------------------------------------------------------ */
+function normalizeKeyframe(k){
+  if (!k || !Number.isFinite(Number(k.frame))) return null;
+  const out = { frame: clamp(Math.round(Number(k.frame)), 0, 100000), easing: EASINGS[k.easing] ? k.easing : 'linear' };
+  for (const prop of ANIM_PROPS) if (Number.isFinite(Number(k[prop]))) out[prop] = Number(k[prop]);
+  for (const prop of ANIM_COLORS) if (k[prop]) out[prop] = toHex(k[prop]);
+  return out;
+}
+
+function applyState(str){
+  let d;
+  try { d = JSON.parse(str); }
+  catch (err){ toast('Could not read project data.'); return; }
+
+  docName = d.docName || 'Untitled Project';
+  canvasW = clamp(parseInt(d.canvasW, 10) || 1920, 64, 8000);
+  canvasH = clamp(parseInt(d.canvasH, 10) || 1080, 64, 8000);
+  bgColor = toHex(d.bgColor || '#ffffff');
+  objects = (Array.isArray(d.objects) ? d.objects : []).map(normalizeObject);
+  keyframes = {};
+  const rawKf = d.keyframes && typeof d.keyframes === 'object' ? d.keyframes : {};
+  for (const key of Object.keys(rawKf)){
+    const id = Number(key);
+    if (!objects.some(o => o.id === id) || !Array.isArray(rawKf[key])) continue;
+    const list = rawKf[key].map(normalizeKeyframe).filter(Boolean).sort((a,b) => a.frame - b.frame);
+    if (list.length) keyframes[id] = list;
+  }
+  nextId = Math.max(parseInt(d.nextId, 10) || 1,
+    objects.reduce((m, o) => Math.max(m, o.id || 0), 0) + 1);
+
+  const t = d.timeline || {};
+  timeline.duration = clamp(parseFloat(t.duration) || 5, 0.5, 60);
+  timeline.fps = [12,24,30,60].includes(parseInt(t.fps, 10)) ? parseInt(t.fps, 10) : 30;
+  timeline.loop = ['loop','once','pingpong'].includes(t.loop) ? t.loop : 'loop';
+  timeline.autoKey = t.autoKey !== false;
+  timeline.frame = clamp(parseInt(t.frame, 10) || 0, 0, totalFrames());
+
+  const st = d.settings || {};
+  settings.grid = !!st.grid;
+  settings.snap = st.snap !== false;
+  settings.onion = !!st.onion;
+
+  selectedIds = Array.isArray(d.selectedIds) ? d.selectedIds.map(Number).filter(id => objects.some(o => o.id === id)) : [];
+  snapGuides = [];
+
+  $id('docName').value = docName;
+  $id('tlDuration').value = timeline.duration;
+  $id('motionDuration').value = timeline.duration;
+  $id('tlFps').value = String(timeline.fps);
+  $id('motionFps').value = String(timeline.fps);
+  $id('tlLoopMode').value = timeline.loop;
+  $id('autoKeyToggle').checked = timeline.autoKey;
+
+  syncSettingsUI();
+  applyCanvasSize();
+  applyAnimations(timeline.frame);
+  renderAll();
+}
+
+function syncSettingsUI(){
+  $id('gridBtn').classList.toggle('active', settings.grid);
+  $id('snapBtn').classList.toggle('active', settings.snap);
+  $id('onionBtn').classList.toggle('active', settings.onion);
+  $id('gridRect').setAttribute('display', settings.grid ? 'inline' : 'none');
+  $id('autoKeyToggle').checked = timeline.autoKey;
+  $id('tlLoopMode').value = timeline.loop;
+}
+
+/* ------------------------------------------------------------------ */
+/*  New project & sample scene                                        */
+/* ------------------------------------------------------------------ */
+function newProject(){
+  stopPlayback();
+  closePreview();
+  snapshot();
+  objects = [];
+  keyframes = {};
+  selectedIds = [];
+  nextId = 1;
+  canvasW = 1920; canvasH = 1080; bgColor = '#ffffff';
+  timeline = { duration:5, fps:30, frame:0, loop:'loop', autoKey:true };
+  settings = { grid:false, snap:true, onion:false };
+  docName = 'Untitled Project';
+  $id('docName').value = docName;
+  $id('tlDuration').value = 5;
+  $id('motionDuration').value = 5;
+  $id('tlFps').value = '30';
+  $id('motionFps').value = '30';
+  applyCanvasSize();
+  syncSettingsUI();
+  fitCanvas();
+  renderAll();
+  markUnsaved();
+  toast('New project started.');
+}
+
+function loadSample(){
+  stopPlayback();
+  closePreview();
+  objects = [];
+  keyframes = {};
+  selectedIds = [];
+  nextId = 1;
+  docName = 'Neon Orbit — Sample';
+  canvasW = 1920; canvasH = 1080; bgColor = '#0b0d12';
+  timeline = { duration:3, fps:30, frame:0, loop:'loop', autoKey:true };
+  settings = { grid:false, snap:true, onion:false };
+  $id('docName').value = docName;
+
+  const backdrop = makeObject('rect', 90, 90, {
+    name:'Backdrop', w:1740, h:900, radius:44, fillMode:'gradient',
+    gradFrom:'#241b4f', gradTo:'#0e2c35', gradAngle:35, strokeWidth:0
+  });
+  objects.push(backdrop);
+
+  const glow = makeObject('ellipse', 250, 210, {
+    name:'Glow orb', w:410, h:410, fillMode:'gradient', gradFrom:'#8b7bff', gradTo:'#ff6b81',
+    gradAngle:120, opacity:.55, strokeWidth:0, blend:'screen',
+    blur:22
+  });
+  objects.push(glow);
+
+  const star = makeObject('star', 1440, 145, {
+    name:'Hero star', w:270, h:270, starPoints:5, starInner:.44,
+    fillMode:'gradient', gradFrom:'#ffd166', gradTo:'#ff8a3d', gradAngle:100,
+    strokeWidth:0, rotation:0, shadow:{ enabled:true, x:0, y:18, blur:30, color:'#000000', opacity:.45 }
+  });
+  objects.push(star);
+
+  const ball = makeObject('ellipse', 360, 670, {
+    name:'Bouncing ball', w:150, h:150, fillMode:'gradient', gradFrom:'#ff8fa4', gradTo:'#ff5c8a',
+    gradAngle:130, strokeWidth:0,
+    shadow:{ enabled:true, x:0, y:16, blur:22, color:'#000000', opacity:.4 }
+  });
+  objects.push(ball);
+
+  const title = makeObject('text', 690, 400, {
+    name:'Title', text:'VECTA\nMOTION', fontSize:132, fontWeight:'900', fontFamily:'Segoe UI',
+    fill:'#ffffff', letterSpacing:6, lineHeight:1.02, textAlign:'start', strokeWidth:0
+  });
+  measureTextObject(title);
+  objects.push(title);
+
+  const sub = makeObject('text', 700, 705, {
+    name:'Subtitle', text:'vector studio · keyframes · gradients', fontSize:36,
+    fontWeight:'400', fontFamily:'Segoe UI', fill:'#9aa8ff', letterSpacing:2, textAlign:'start'
+  });
+  measureTextObject(sub);
+  objects.push(sub);
+
+  // Animate the ball across the canvas with a bounce.
+  const ballFrames = [
+    { f:0,   x:360,  y:670, r:0,   sc:1,   ease:'easeIn' },
+    { f:30,  x:760,  y:310, r:120, sc:1.1, ease:'easeOut' },
+    { f:55,  x:1120, y:690, r:240, sc:.94, ease:'easeOutBack' },
+    { f:75,  x:1440, y:365, r:330, sc:1.05, ease:'easeOut' },
+    { f:90,  x:1640, y:690, r:360, sc:1,   ease:'easeInOut' }
+  ];
+  ballFrames.forEach(k => {
+    ball.x = k.x; ball.y = k.y; ball.rotation = k.r; ball.scaleX = k.sc; ball.scaleY = k.sc;
+    const key = captureKey(ball, k.f);
+    key.easing = k.ease;
+    (keyframes[ball.id] = keyframes[ball.id] || []).push(key);
+  });
+  ball.x = 360; ball.y = 670; ball.rotation = 0; ball.scaleX = 1; ball.scaleY = 1;
+
+  // Star keeps rotating.
+  [0, 45, 90].forEach((f, i) => {
+    star.rotation = i * 120;
+    const key = captureKey(star, f);
+    key.easing = 'easeInOut';
+    (keyframes[star.id] = keyframes[star.id] || []).push(key);
+  });
+  star.rotation = 0;
+
+  // Title drifts upward and the glow pulses.
+  const titleStart = deep(title);
+  // Keep the title visible on frame 0 so a still export never looks empty;
+  // the entrance is a small upward drift plus a scale settle.
+  title.opacity = 1; title.y = (titleStart.y + 40);
+  title.scaleX = .96; title.scaleY = .96;
+  const t0 = captureKey(title, 0); t0.easing = 'easeOut';
+  title.opacity = 1; title.y = titleStart.y;
+  title.scaleX = 1; title.scaleY = 1;
+  const t1 = captureKey(title, 22); t1.easing = 'easeOut';
+  keyframes[title.id] = [t0, t1];
+  title.opacity = 1; title.y = titleStart.y;
+  title.scaleX = 1; title.scaleY = 1;
+
+  const g0 = captureKey(glow, 0); g0.easing = 'easeInOut';
+  glow.scaleX = 1.18; glow.scaleY = 1.18; glow.opacity = .72;
+  const g1 = captureKey(glow, 45); g1.easing = 'easeInOut';
+  glow.scaleX = 1; glow.scaleY = 1; glow.opacity = .55;
+  const g2 = captureKey(glow, 90); g2.easing = 'easeInOut';
+  keyframes[glow.id] = [g0, g1, g2];
+  glow.scaleX = 1; glow.scaleY = 1; glow.opacity = .55;
+
+  timeline.frame = 0;
+  $id('tlDuration').value = timeline.duration;
+  $id('motionDuration').value = timeline.duration;
+  $id('tlFps').value = String(timeline.fps);
+  $id('motionFps').value = String(timeline.fps);
+  syncSettingsUI();
+  applyCanvasSize();
+  applyAnimations(0);
+  fitCanvas();
+  renderAll();
+  scheduleAutosave();
+  markUnsaved();
+}
+
+/* ------------------------------------------------------------------ */
+/*  Project save / open                                               */
+/* ------------------------------------------------------------------ */
+function saveProject(){
+  const blob = new Blob([serializeState()], {type:'application/json'});
+  download(blob, safeName() + '.json');
+  try { localStorage.setItem(AUTOSAVE_KEY, serializeState()); } catch (err){}
+  markSaved();
+  toast('Project saved as JSON.');
+}
+
+function openProjectFile(file){
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      snapshot();
+      applyState(reader.result);
+      fitCanvas();
+      markSaved();
+      scheduleAutosave();
+      toast('Project opened.');
+    } catch (err){
+      console.error(err);
+      toast('Could not open that project file.');
+    }
+  };
+  reader.readAsText(file);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Image & PSD / AI import                                           */
+/* ------------------------------------------------------------------ */
+function addImageFromSrc(src, name){
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => {
+      let w = img.naturalWidth || 800;
+      let h = img.naturalHeight || 600;
+      const maxW = canvasW * 0.85;
+      const maxH = canvasH * 0.85;
+      const scale = Math.min(1, maxW / w, maxH / h);
+      w = Math.max(1, Math.round(w * scale));
+      h = Math.max(1, Math.round(h * scale));
+
+      const o = makeObject('image', (canvasW - w)/2, (canvasH - h)/2);
+      o.w = w; o.h = h;
+      o.href = src;
+      o.name = name || 'Image';
+      objects.push(o);
+      selectedIds = [o.id];
+      renderAll();
+      resolve(o);
+    };
+    img.onerror = () => { toast('Could not load that image.'); resolve(null); };
+    img.src = src;
+  });
+}
+
+async function importImage(file){
+  const dataUrl = await new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result);
+    r.onerror = () => rej(new Error('read failed'));
+    r.readAsDataURL(file);
+  });
+  snapshot();
+  const name = file.name.replace(/\.[^.]+$/, '');
+  await addImageFromSrc(dataUrl, name);
+}
+
+async function importPSD(file){
+  toast('Loading PSD decoder…');
+  await loadScript('https://cdn.jsdelivr.net/npm/ag-psd@18.1.0/dist/bundle.js');
+  const agPsd = window.agPsd;
+  if (!agPsd) throw new Error('PSD decoder unavailable');
+
+  const buffer = await file.arrayBuffer();
+  const psd = agPsd.readPsd(buffer, { useImageData: false });
+  if (!psd) throw new Error('PSD could not be decoded');
+
+  snapshot();
+
+  const maxDim = 4096;
+  const scale = Math.min(1, maxDim / Math.max(psd.width || 1, psd.height || 1));
+  canvasW = Math.max(64, Math.round((psd.width || 1920) * scale));
+  canvasH = Math.max(64, Math.round((psd.height || 1080) * scale));
+
+  const layers = [];
+  function walk(list){
+    for (const layer of list || []){
+      if (layer && layer.canvas && !layer.hidden){
+        try {
+          layers.push({
+            x: (layer.left || 0) * scale,
+            y: (layer.top || 0) * scale,
+            w: Math.max(1, layer.canvas.width * scale),
+            h: Math.max(1, layer.canvas.height * scale),
+            href: layer.canvas.toDataURL('image/png'),
+            name: layer.name || 'PSD Layer'
+          });
+        } catch (err){ /* skip layer */ }
+      }
+      if (layer && layer.children) walk(layer.children);
+    }
+  }
+  walk(psd.children);
+
+  if (!layers.length && psd.canvas){
+    layers.push({
+      x: 0, y: 0,
+      w: canvasW, h: canvasH,
+      href: psd.canvas.toDataURL('image/png'),
+      name: 'PSD Composite'
+    });
+  }
+
+  if (!layers.length){
+    toast('No raster layers found. This PSD may only contain unsupported features.');
+    return;
+  }
+
+  const capped = layers.slice(0, 80);
+  for (let i = capped.length - 1; i >= 0; i--){
+    const L = capped[i];
+    const o = makeObject('image', L.x, L.y);
+    o.w = L.w; o.h = L.h;
+    o.href = L.href;
+    o.name = L.name;
+    objects.push(o);
+  }
+  selectedIds = [];
+
+  applyCanvasSize();
+  fitCanvas();
+  renderAll();
+  markUnsaved();
+  toast('PSD imported as image layers. Advanced PSD features may be missing.');
+}
+
+async function importAIorPDF(file){
+  const buffer = await file.arrayBuffer();
+
+  const headBytes = new Uint8Array(buffer.slice(0, 400));
+  const head = new TextDecoder('latin1').decode(headBytes);
+  if (head.includes('<svg')){
+    const text = new TextDecoder().decode(buffer);
+    const dataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(text);
+    snapshot();
+    await addImageFromSrc(dataUrl, file.name.replace(/\.[^.]+$/, ''));
+    toast('SVG-based AI imported as an image. Individual paths are not editable.');
+    return;
+  }
+
+  if (head.trimStart().startsWith('%!PS')){
+    toast('EPS-only AI files are not supported. Export an SVG or PDF from Illustrator instead.');
+    return;
+  }
+
+  toast('Loading PDF renderer (for AI compatibility)…');
+  await loadScript('https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js');
+  const pdfjsLib = window.pdfjsLib;
+  if (!pdfjsLib) throw new Error('PDF renderer unavailable');
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+
+  const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buffer) }).promise;
+  const page = await pdf.getPage(1);
+  const viewport = page.getViewport({ scale: 2 });
+  const c = document.createElement('canvas');
+  c.width = Math.round(viewport.width);
+  c.height = Math.round(viewport.height);
+  const ctx = c.getContext('2d');
+  await page.render({ canvasContext: ctx, viewport }).promise;
+
+  snapshot();
+  canvasW = Math.min(4096, c.width);
+  canvasH = Math.min(4096, c.height);
+  const dataUrl = c.toDataURL('image/png');
+
+  const o = makeObject('image', 0, 0);
+  o.w = canvasW;
+  o.h = canvasH;
+  o.href = dataUrl;
+  o.name = 'AI / PDF artboard';
+  objects.push(o);
+  selectedIds = [o.id];
+
+  applyCanvasSize();
+  fitCanvas();
+  renderAll();
+  markUnsaved();
+  toast('AI/PDF rendered as a raster image. Text and paths are not editable.');
+}
+
+async function handleFile(file){
+  const ext = (file.name.split('.').pop() || '').toLowerCase();
+  try {
+    if (ext === 'json'){ openProjectFile(file); return; }
+    if (ext === 'psd'){ await importPSD(file); return; }
+    if (ext === 'ai' || ext === 'pdf'){ await importAIorPDF(file); return; }
+    if (['png','jpg','jpeg','webp','gif','svg','bmp'].includes(ext)){
+      await importImage(file);
+      toast('Image imported.');
+      return;
+    }
+    toast('Unsupported file type: .' + ext);
+  } catch (err){
+    console.error(err);
+    toast('Import failed: ' + (err.message || 'unknown error'));
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Export                                                            */
+/* ------------------------------------------------------------------ */
+function renderAtFrame(frame){
+  applyAnimations(frame);
+  renderScene();
+}
+
+function buildExportSVG(transparent){
+  const clone = $id('svg').cloneNode(true);
+  for (const sel of ['#overlay', '#onion', '#gridRect']){
+    const el = clone.querySelector(sel);
+    if (el) el.remove();
+  }
+  if (transparent){
+    const bg = clone.querySelector('#bgRect');
+    if (bg) bg.setAttribute('fill', 'none');
+  }
+  clone.setAttribute('xmlns', NS);
+  clone.setAttribute('xmlns:xlink', XLINK);
+  clone.setAttribute('width', canvasW);
+  clone.setAttribute('height', canvasH);
+  clone.setAttribute('viewBox', `0 0 ${canvasW} ${canvasH}`);
+  clone.removeAttribute('data-tool');
+  return new XMLSerializer().serializeToString(clone);
+}
+
+function svgToImage(svgText){
+  return new Promise((resolve, reject) => {
+    const blob = new Blob([svgText], {type:'image/svg+xml;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const img = new Image();
+    img.onload = () => { URL.revokeObjectURL(url); resolve(img); };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('SVG render failed')); };
+    img.src = url;
+  });
+}
+
+function downloadBlob(blob, name){
+  if (blob) download(blob, name);
+  else toast('Export failed: no data produced.');
+}
+
+function exportSVG(transparent){
+  renderAtFrame(timeline.frame);
+  const blob = new Blob([buildExportSVG(transparent)], {type:'image/svg+xml;charset=utf-8'});
+  downloadBlob(blob, safeName() + '.svg');
+  toast('SVG exported.');
+}
+
+async function exportRaster(type, scale, transparent){
+  renderAtFrame(timeline.frame);
+  const img = await svgToImage(buildExportSVG(transparent || type === 'jpeg'));
+  const c = document.createElement('canvas');
+  c.width = Math.max(1, Math.round(canvasW * scale));
+  c.height = Math.max(1, Math.round(canvasH * scale));
+  const ctx = c.getContext('2d');
+  if (!transparent || type === 'jpeg'){
+    ctx.fillStyle = type === 'jpeg' ? '#ffffff' : bgColor;
+    ctx.fillRect(0,0,c.width,c.height);
+  }
+  ctx.drawImage(img, 0, 0, c.width, c.height);
+  const mime = type === 'jpeg' ? 'image/jpeg' : type === 'webp' ? 'image/webp' : 'image/png';
+  const quality = type === 'jpeg' ? .92 : type === 'webp' ? .95 : undefined;
+  const blob = await new Promise(res => c.toBlob(res, mime, quality));
+  downloadBlob(blob, safeName() + '.' + (type === 'jpeg' ? 'jpg' : type));
+  toast((type === 'jpeg' ? 'JPEG' : type.toUpperCase()) + ' exported at ' + c.width + '×' + c.height + '.');
+}
+
+async function exportSpriteSheet(columns, scale, transparent, onProgress){
+  const total = totalFrames();
+  const count = total + 1;
+  const cols = clamp(columns || 8, 1, 32);
+  const rows = Math.ceil(count / cols);
+  const cellW = Math.max(1, Math.round(canvasW * scale));
+  const cellH = Math.max(1, Math.round(canvasH * scale));
+  const sheet = document.createElement('canvas');
+  sheet.width = cellW * cols;
+  sheet.height = cellH * rows;
+  if (sheet.width * sheet.height > 268000000) throw new Error('Sprite sheet is too large. Lower the scale or columns.');
+
+  const ctx = sheet.getContext('2d');
+  if (!transparent){
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(0,0,sheet.width,sheet.height);
+  }
+
+  for (let f = 0; f < count; f++){
+    if (exportCancel) throw new Error('cancelled');
+    renderAtFrame(f);
+    const img = await svgToImage(buildExportSVG(transparent));
+    const col = f % cols, row = Math.floor(f / cols);
+    ctx.drawImage(img, col * cellW, row * cellH, cellW, cellH);
+    if (onProgress) onProgress(Math.round((f + 1) / count * 100), f, count - 1);
+    await sleep(0);
+  }
+
+  applyAnimations(timeline.frame);
+  renderScene();
+  const blob = await new Promise(res => sheet.toBlob(res, 'image/png'));
+  downloadBlob(blob, safeName() + '-sprites.png');
+  toast(`Sprite sheet exported: ${count} frames, ${cols}×${rows}.`);
+}
+
+function getVideoFormats(){
+  if (videoFormatsCache) return videoFormatsCache;
+  const candidates = [
+    { id:'h264', label:'MP4 · H.264', ext:'mp4',
+      mimes:['video/mp4;codecs=avc1.42E01E','video/mp4;codecs=avc1.4D401F','video/mp4'] },
+    { id:'h265', label:'MP4 · H.265 / HEVC', ext:'mp4',
+      mimes:['video/mp4;codecs=hvc1.1.6.L93.B0','video/mp4;codecs=hvc1','video/mp4;codecs=hev1'] },
+    { id:'vp9', label:'WebM · VP9', ext:'webm',
+      mimes:['video/webm;codecs=vp9','video/webm'] },
+    { id:'vp8', label:'WebM · VP8', ext:'webm',
+      mimes:['video/webm;codecs=vp8'] }
+  ];
+  const out = [];
+  if (!window.MediaRecorder){ videoFormatsCache = out; return out; }
+
+  for (const c of candidates){
+    let mime = null;
+    for (const m of c.mimes){
+      try { if (MediaRecorder.isTypeSupported(m)){ mime = m; break; } } catch (err){}
+    }
+    if (mime) out.push({ id:c.id, label:c.label, mime, ext:c.ext });
+  }
+  videoFormatsCache = out;
+  return out;
+}
+
+async function drawFrameToCanvas(ctx, W, H){
+  const img = await svgToImage(buildExportSVG(false));
+  ctx.fillStyle = bgColor;
+  ctx.fillRect(0,0,W,H);
+  const s = Math.min(W / canvasW, H / canvasH);
+  const dw = canvasW * s;
+  const dh = canvasH * s;
+  ctx.drawImage(img, (W - dw)/2, (H - dh)/2, dw, dh);
+}
+
+async function exportVideo(fmt, W, H, onProgress){
+  if (!window.MediaRecorder) throw new Error('MediaRecorder is not supported in this browser.');
+
+  const total = totalFrames();
+  const canvas = document.createElement('canvas');
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = bgColor;
+  ctx.fillRect(0,0,W,H);
+
+  let stream;
+  let track = null;
+  let manual = false;
+  try {
+    stream = canvas.captureStream(0);
+    track = stream.getVideoTracks()[0];
+    manual = !!(track && typeof track.requestFrame === 'function');
+  } catch (err){}
+
+  if (!stream){
+    stream = canvas.captureStream(timeline.fps);
+    track = stream.getVideoTracks()[0];
+    manual = false;
+  }
+
+  const bitrate = Math.max(900000, Math.min(20000000, Math.round(W * H * timeline.fps * 0.12)));
+  const rec = new MediaRecorder(stream, { mimeType: fmt.mime, videoBitsPerSecond: bitrate });
+  const chunks = [];
+  rec.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
+  const stopped = new Promise(resolve => { rec.onstop = resolve; });
+
+  const backup = deep(objects);
+  exportCancel = false;
+
+  rec.start(500);
+  await sleep(150);
+
+  try {
+    for (let f = 0; f < total; f++){
+      if (exportCancel) break;
+      applyAnimations(f);
+      renderScene();
+      await drawFrameToCanvas(ctx, W, H);
+      if (manual) track.requestFrame();
+      if (onProgress) onProgress(Math.round((f + 1) / total * 100), f, total - 1);
+      await sleep(1000 / timeline.fps);
+    }
+  } finally {
+    await sleep(180);
+    if (rec.state !== 'inactive') rec.stop();
+    await stopped;
+    try { stream.getTracks().forEach(t => t.stop()); } catch (err){}
+  }
+
+  objects = backup;
+  applyAnimations(timeline.frame);
+  renderScene();
+
+  if (exportCancel){
+    toast('Video export cancelled.');
+    return;
+  }
+  if (!chunks.length) throw new Error('No video data was produced.');
+
+  const blob = new Blob(chunks, { type: fmt.mime.split(';')[0] });
+  downloadBlob(blob, safeName() + '.' + fmt.ext);
+  toast(fmt.label + ' exported.');
+}
+
+/* ------------------------------------------------------------------ */
+/*  Live edit helpers & status                                        */
+/* ------------------------------------------------------------------ */
+function afterObjectEdit(o, live){
+  if (timeline.autoKey && keyframes[o.id] && keyframes[o.id].length){
+    upsertKeyframe(o, timeline.frame);
+  }
+  if (live){
+    syncNode(o);
+    drawOverlay();
+    updateStatus();
+  } else {
+    renderAll();
+  }
+}
+
+function updateStatus(){
+  $id('objectCount').textContent = objects.length + ' object' + (objects.length === 1 ? '' : 's');
+  $id('dimensions').textContent = canvasW + ' × ' + canvasH + ' px';
+  $id('frameStatus').textContent = 'Frame ' + timeline.frame;
+  $id('emptyHint').style.display = objects.length ? 'none' : '';
+  const sel = selectedObjects();
+  $id('selectionBadge').hidden = sel.length < 2;
+  $id('selectionBadge').textContent = sel.length + ' selected';
+  if (sel.length > 1) $id('selectedName').textContent = sel.length + ' objects selected';
+  else if (sel.length === 1) $id('selectedName').textContent = sel[0].name || sel[0].type;
+  else $id('selectedName').textContent = 'Nothing selected';
+}
+
+function renderAll(){
+  selectedIds = selectedIds.filter(id => objects.some(o => o.id === id));
+  renderScene();
+  buildLayers();
+  buildTimeline();
+  buildKeyframeList();
+  syncInspector();
+  updateStatus();
+  $id('zoomLabel').textContent = Math.round(zoom * 100) + '%';
+}
+
+/* ------------------------------------------------------------------ */
+/*  Tools / UI binding                                                */
+/* ------------------------------------------------------------------ */
+function setTool(t){
+  tool = t;
+  $$('.tool').forEach(b => b.classList.toggle('active', b.dataset.tool === t));
+  $id('svg').dataset.tool = t;
+  $id('svg').style.cursor = t === 'hand' ? 'grab' : t === 'select' ? 'default' : 'crosshair';
+  drawOverlay();
+}
+
+function toggleSetting(name){
+  settings[name] = !settings[name];
+  syncSettingsUI();
+  if (name === 'grid') applyCanvasSize();
+  if (name === 'onion') renderScene();
+  markUnsaved();
+  toast(name.charAt(0).toUpperCase() + name.slice(1) + ' ' + (settings[name] ? 'on' : 'off') + '.');
+}
+
+function bindTools(){
+  $$('.tool[data-tool]').forEach(btn => {
+    btn.addEventListener('click', () => setTool(btn.dataset.tool));
+  });
+  $id('toolDelete').addEventListener('click', deleteSelected);
+}
+
+function bindTop(){
+  $id('docName').addEventListener('input', e => {
+    docName = e.target.value || 'Untitled Project';
+    beginEdit();
+  });
+  $id('docName').addEventListener('change', commitEdit);
+
+  $id('undoBtn').addEventListener('click', undo);
+  $id('redoBtn').addEventListener('click', redo);
+  $id('saveBtn').addEventListener('click', saveProject);
+  $id('openBtn').addEventListener('click', () => $id('projectInput').click());
+  $id('importBtn').addEventListener('click', () => $id('fileInput').click());
+  $id('exportBtn').addEventListener('click', openExportModal);
+  $id('docsBtnTop').addEventListener('click', openDocs);
+  $id('openDocsBtn').addEventListener('click', openDocs);
+  $id('previewBtn').addEventListener('click', openPreview);
+
+  $id('newBtn').addEventListener('click', () => {
+    if (!confirm('Start a new project? Save your current work first.')) return;
+    newProject();
+  });
+
+  $id('addRectBtn').addEventListener('click', () => setTool('rect'));
+  $id('addEllipseBtn').addEventListener('click', () => setTool('ellipse'));
+  $id('addLineBtn').addEventListener('click', () => setTool('line'));
+  $id('addStarBtn').addEventListener('click', () => setTool('star'));
+  $id('addPolyBtn').addEventListener('click', () => setTool('polygon'));
+  $id('addTextBtn').addEventListener('click', () => setTool('text'));
+  $id('duplicateBtn').addEventListener('click', duplicateSelected);
+  $id('deleteBtn').addEventListener('click', deleteSelected);
+
+  $id('zoomIn').addEventListener('click', () => setZoom(zoom * 1.15));
+  $id('zoomOut').addEventListener('click', () => setZoom(zoom / 1.15));
+  $id('fitBtn').addEventListener('click', fitCanvas);
+  $id('playTopBtn').addEventListener('click', playToggle);
+
+  $id('gridBtn').addEventListener('click', () => toggleSetting('grid'));
+  $id('snapBtn').addEventListener('click', () => toggleSetting('snap'));
+  $id('onionBtn').addEventListener('click', () => toggleSetting('onion'));
+
+  $id('sampleBtn').addEventListener('click', () => {
+    if (objects.length && !confirm('Replace the current scene with the sample?')) return;
+    loadSample();
+    toast('Sample scene loaded.');
+  });
+  $id('sampleHintBtn').addEventListener('click', () => {
+    loadSample();
+    toast('Sample scene loaded.');
+  });
+
+  $id('noticeClose').addEventListener('click', () => {
+    $id('notice').style.display = 'none';
+    try { localStorage.setItem('vecta-motion-pro.notice', 'dismissed'); } catch (err){}
+    setTimeout(fitCanvas, 50);
+  });
+
+  $id('projectInput').addEventListener('change', e => {
+    const f = e.target.files && e.target.files[0];
+    if (f) openProjectFile(f);
+    e.target.value = '';
+  });
+
+  $id('fileInput').addEventListener('change', e => {
+    const f = e.target.files && e.target.files[0];
+    if (f) handleFile(f);
+    e.target.value = '';
+  });
+
+  $id('stage').addEventListener('dragover', e => e.preventDefault());
+  $id('stage').addEventListener('drop', e => {
+    e.preventDefault();
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]){
+      handleFile(e.dataTransfer.files[0]);
+    }
+  });
+
+  $id('stage').addEventListener('wheel', e => {
+    if (!e.ctrlKey) return;
+    e.preventDefault();
+    zoomAt(zoom * (e.deltaY < 0 ? 1.1 : 0.9), e.clientX, e.clientY);
+  }, { passive:false });
+}
+
+function bindTimeline(){
+  $id('tlPlay').addEventListener('click', playToggle);
+  $id('tlStop').addEventListener('click', () => { stopPlayback(); seek(0); });
+  $id('tlLoopMode').addEventListener('change', e => {
+    timeline.loop = e.target.value;
+    markUnsaved();
+  });
+  $id('tlAddKf').addEventListener('click', addKeyframeAtPlayhead);
+  $id('addKfBtn').addEventListener('click', addKeyframeAtPlayhead);
+  $id('copyMotionBtn').addEventListener('click', copyMotion);
+  $id('pasteMotionBtn').addEventListener('click', pasteMotion);
+  $id('reverseMotionBtn').addEventListener('click', reverseMotion);
+
+  $id('autoKeyToggle').addEventListener('change', e => {
+    timeline.autoKey = e.target.checked;
+    markUnsaved();
+  });
+
+  $id('clearKfBtn').addEventListener('click', () => {
+    const o = getSelected();
+    if (!o) return;
+    snapshot();
+    delete keyframes[o.id];
+    applyAnimations(timeline.frame);
+    renderAll();
+  });
+
+  const setDuration = v => {
+    v = clamp(parseFloat(v) || 5, 0.5, 60);
+    snapshot();
+    timeline.duration = v;
+    $id('tlDuration').value = v;
+    $id('motionDuration').value = v;
+    timeline.frame = clamp(timeline.frame, 0, totalFrames());
+    applyAnimations(timeline.frame);
+    renderAll();
+  };
+  $id('tlDuration').addEventListener('change', e => setDuration(e.target.value));
+  $id('motionDuration').addEventListener('change', e => setDuration(e.target.value));
+
+  const changeFps = e => {
+    const v = parseInt(e.target.value, 10);
+    if (![12,24,30,60].includes(v)) return;
+    snapshot();
+    timeline.fps = v;
+    $id('tlFps').value = String(v);
+    $id('motionFps').value = String(v);
+    timeline.frame = clamp(timeline.frame, 0, totalFrames());
+    applyAnimations(timeline.frame);
+    renderAll();
+  };
+  $id('tlFps').addEventListener('change', changeFps);
+  $id('motionFps').addEventListener('change', changeFps);
+
+  $id('tlZoom').addEventListener('input', e => {
+    pxPerFrame = clamp(parseInt(e.target.value, 10) || 8, 3, 40);
+    buildTimeline();
+  });
+
+  const ruler = $id('ruler');
+  ruler.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    stopPlayback();
+    gesture = { kind:'scrub' };
+    seek(frameFromEvent(e), true);
+  });
+
+  $id('playhead').addEventListener('pointerdown', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    stopPlayback();
+    gesture = { kind:'scrub' };
+    seek(frameFromEvent(e), true);
+  });
+
+  $id('tracksScroll').addEventListener('scroll', () => {
+    $id('trackNames').scrollTop = $id('tracksScroll').scrollTop;
+  });
+}
+
+function bindStage(){
+  $id('stage').addEventListener('pointerdown', e => {
+    if (e.button !== 0) return;
+
+    if (tool === 'hand'){
+      e.preventDefault();
+      gesture = {
+        kind:'pan',
+        cx: e.clientX, cy: e.clientY,
+        sl: $id('stage').scrollLeft,
+        st: $id('stage').scrollTop
+      };
+      return;
+    }
+
+    if (tool === 'select'){
+      if (!e.target.closest('[data-id]') && !e.target.closest('[data-handle]') && !e.target.closest('#overlay circle')){
+        const p = screenToSvg(e);
+        gesture = { kind:'marquee', start:p, cur:p, additive:e.shiftKey };
+        marqueeRect = { x:p.x, y:p.y, w:0, h:0 };
+        drawOverlay();
+      }
+      return;
+    }
+
+    if (tool === 'eraser') return;
+
+    const p = screenToSvg(e);
+    if (tool === 'text'){ startText(p); return; }
+    if (tool === 'brush'){ startBrush(p); return; }
+    if (['rect','ellipse','line','star','polygon'].includes(tool)){ startCreate(tool, p); return; }
+  });
+
+  $id('content').addEventListener('pointerdown', e => {
+    const target = e.target.closest('[data-id]');
+    if (!target) return;
+    const o = objects.find(x => x.id === Number(target.dataset.id));
+    if (!o || o.locked) return;
+
+    if (tool === 'eraser'){
+      e.preventDefault();
+      e.stopPropagation();
+      snapshot();
+      objects = objects.filter(x => x.id !== o.id);
+      delete keyframes[o.id];
+      selectedIds = selectedIds.filter(x => x !== o.id);
+      renderAll();
+      return;
+    }
+
+    if (tool !== 'select') return;
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (e.shiftKey){
+      const was = isSelected(o.id);
+      selectObject(o.id, true);
+      if (was) return;
+    } else if (!isSelected(o.id)){
+      selectObject(o.id);
+    } else if (selectedIds.length > 1){
+      selectObject(o.id);
+    }
+
+    if (e.altKey){
+      beginEdit();
+      cloneSelection(0);
+      renderAll();
+      const primary = objects.find(x => x.id === selectedIds[selectedIds.length-1]);
+      beginMove(e, primary || o);
+      return;
+    }
+    beginMove(e, getSelected() || o);
+  });
+
+  window.addEventListener('pointermove', onPointerMove);
+  window.addEventListener('pointerup', onPointerUp);
+  window.addEventListener('pointercancel', onPointerUp);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Export modal                                                      */
+/* ------------------------------------------------------------------ */
+function openExportModal(){
+  exportCancel = false;
+  $id('expBar').style.width = '0%';
+  $id('expStatus').textContent = 'Ready.';
+  $id('expStart').disabled = false;
+  $id('expCancel').textContent = 'Cancel';
+
+  const sel = $id('expFormat');
+  sel.replaceChildren();
+  const add = (value, label) => {
+    const o = document.createElement('option');
+    o.value = value; o.textContent = label;
+    sel.appendChild(o);
+  };
+  add('svg','SVG — vector, current frame');
+  add('png','PNG — current frame');
+  add('jpeg','JPEG — current frame');
+  add('webp','WebP — current frame');
+  add('spritesheet','Sprite sheet — all frames (PNG)');
+  add('json','Project JSON');
+
+  const videos = getVideoFormats();
+  videos.forEach(f => add(f.id, f.label));
+  if (!videos.length){
+    const note = document.createElement('option');
+    note.disabled = true;
+    note.textContent = 'Video export unavailable in this browser';
+    sel.appendChild(note);
+  }
+
+  const res = $id('expRes');
+  res.replaceChildren();
+  const addRes = (value, label) => {
+    const o = document.createElement('option');
+    o.value = value; o.textContent = label;
+    res.appendChild(o);
+  };
+  addRes(canvasW + 'x' + canvasH, `Canvas · ${canvasW}×${canvasH}`);
+  addRes('1920x1080','1920 × 1080 (Full HD)');
+  addRes('1280x720','1280 × 720 (HD)');
+  addRes('1080x1080','1080 × 1080 (Square)');
+  addRes('1080x1920','1080 × 1920 (Vertical)');
+
+  sel.value = 'png';
+  updateExportUI();
+  $id('exportModal').classList.add('open');
+}
+
+function updateExportUI(){
+  const fmt = $id('expFormat').value;
+  const isVideo = getVideoFormats().some(f => f.id === fmt);
+  const isRaster = ['png','jpeg','webp'].includes(fmt);
+  const isSprite = fmt === 'spritesheet';
+  $id('expResRow').style.display = isVideo ? '' : 'none';
+  $id('expScaleRow').style.display = isRaster || isSprite ? '' : 'none';
+  $id('expColumnsRow').style.display = isSprite ? '' : 'none';
+  $id('expTransparentRow').style.display = ['svg','png','webp','spritesheet'].includes(fmt) ? '' : 'none';
+  $id('expTransparentRow').querySelector('label').style.opacity = fmt === 'svg' ? '.55' : '1';
+
+  if (fmt === 'svg'){
+    $id('expInfo').textContent = 'Exports the current frame as a true vector SVG file. Text stays editable in vector tools.';
+  } else if (isRaster){
+    $id('expInfo').textContent = `Exports the current frame at the chosen scale, up to ${Math.round(canvasW*2)}×${Math.round(canvasH*2)}.`;
+  } else if (isSprite){
+    $id('expInfo').textContent = `Packs frames 0–${totalFrames()} into one PNG grid using ${timeline.fps} FPS timing metadata. Transparent cells are supported.`;
+  } else if (fmt === 'json'){
+    $id('expInfo').textContent = 'Saves the editable project (objects + keyframes) as JSON.';
+  } else if (isVideo){
+    const f = getVideoFormats().find(x => x.id === fmt);
+    $id('expInfo').textContent = `${f.label} · ${timeline.duration}s at ${timeline.fps} FPS. Rendering happens in real time; keep the tab visible. No audio.`;
+  } else {
+    $id('expInfo').textContent = '';
+  }
+}
+
+async function runExport(){
+  const fmt = $id('expFormat').value;
+  const transparent = $id('expTransparent').checked;
+  const scale = parseFloat($id('expScale').value) || 1;
+  const columns = parseInt($id('expColumns').value, 10) || 8;
+  exportCancel = false;
+  $id('expStart').disabled = true;
+  $id('expBar').style.width = '0%';
+  try {
+    if (fmt === 'svg'){
+      exportSVG(transparent);
+      $id('expStatus').textContent = 'SVG downloaded.';
+      $id('expBar').style.width = '100%';
+    } else if (['png','jpeg','webp'].includes(fmt)){
+      $id('expStatus').textContent = 'Rendering image…';
+      await exportRaster(fmt, scale, transparent);
+      $id('expStatus').textContent = 'Image downloaded.';
+      $id('expBar').style.width = '100%';
+    } else if (fmt === 'spritesheet'){
+      $id('expStatus').textContent = 'Rendering sprite sheet…';
+      await exportSpriteSheet(columns, scale, transparent, (pct, frame, total) => {
+        $id('expBar').style.width = pct + '%';
+        $id('expStatus').textContent = `Rendering frame ${frame} / ${total} (${pct}%)…`;
+      });
+      $id('expBar').style.width = '100%';
+      $id('expStatus').textContent = 'Sprite sheet downloaded.';
+    } else if (fmt === 'json'){
+      saveProject();
+      $id('expStatus').textContent = 'Project JSON downloaded.';
+      $id('expBar').style.width = '100%';
+    } else {
+      const f = getVideoFormats().find(x => x.id === fmt);
+      if (!f) throw new Error('Unsupported video format.');
+      const [w,h] = $id('expRes').value.split('x').map(Number);
+      await exportVideo(f, w, h, (pct, frame, total) => {
+        $id('expBar').style.width = pct + '%';
+        $id('expStatus').textContent = `Rendering frame ${frame} / ${total} (${pct}%)…`;
+      });
+      $id('expBar').style.width = '100%';
+      $id('expStatus').textContent = exportCancel ? 'Export cancelled.' : 'Video downloaded.';
+    }
+  } catch (err){
+    console.error(err);
+    const msg = err && err.message === 'cancelled' ? 'Export cancelled.' : 'Export failed: ' + (err.message || 'unknown error');
+    $id('expStatus').textContent = msg;
+    toast(msg);
+  } finally {
+    $id('expStart').disabled = false;
+    $id('expCancel').textContent = 'Close';
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Preview                                                           */
+/* ------------------------------------------------------------------ */
+function openPreview(){
+  if (!objects.length){ toast('Nothing to preview yet.'); return; }
+  stopPlayback();
+  const svg = $id('previewSvg');
+  svg.setAttribute('viewBox', `0 0 ${canvasW} ${canvasH}`);
+  svg.setAttribute('width', canvasW);
+  svg.setAttribute('height', canvasH);
+  $id('previewMeta').textContent = `${canvasW} × ${canvasH} · ${timeline.duration}s`;
+  $id('previewLoop').value = timeline.loop;
+  previewFrame = timeline.frame >= totalFrames() ? 0 : timeline.frame;
+  $id('previewModal').classList.add('open');
+  renderPreviewFrame(previewFrame);
+  startPreview();
+}
+
+function renderPreviewFrame(frame){
+  previewFrame = clamp(frame, 0, totalFrames());
+  applyAnimations(previewFrame);
+  const svg = $id('previewSvg');
+  svg.replaceChildren();
+  const bg = document.createElementNS(NS,'rect');
+  bg.setAttribute('x', 0); bg.setAttribute('y', 0);
+  bg.setAttribute('width', canvasW); bg.setAttribute('height', canvasH);
+  bg.setAttribute('fill', bgColor);
+  svg.appendChild(bg);
+  for (const o of objects) svg.appendChild(buildNode(o));
+  $id('previewTime').textContent = `${(previewFrame / timeline.fps).toFixed(2)}s / ${timeline.duration.toFixed(2)}s`;
+}
+
+function startPreview(){
+  if (previewPlaying) return;
+  previewPlaying = true;
+  previewDir = 1;
+  previewStartFrame = previewFrame >= totalFrames() ? 0 : previewFrame;
+  previewStart = performance.now();
+  $id('previewPlay').textContent = '⏸ Pause';
+  const tick = now => {
+    if (!previewPlaying) return;
+    const elapsed = (now - previewStart) / 1000;
+    let f = previewStartFrame + elapsed * timeline.fps * previewDir;
+    const total = totalFrames();
+    const mode = $id('previewLoop').value;
+    if (f > total){
+      if (mode === 'once'){ f = total; previewPlaying = false; }
+      else if (mode === 'pingpong'){ f = total; previewDir = -1; previewStartFrame = total; previewStart = now; }
+      else { previewStartFrame = 0; previewStart = now; f = (f - total) % total; }
+    } else if (f < 0){
+      if (mode === 'pingpong'){ f = 0; previewDir = 1; previewStartFrame = 0; previewStart = now; }
+      else { f = 0; previewPlaying = false; }
+    }
+    renderPreviewFrame(Math.round(f));
+    if (previewPlaying) previewRaf = requestAnimationFrame(tick);
+    else $id('previewPlay').textContent = '▶ Play';
+  };
+  previewRaf = requestAnimationFrame(tick);
+}
+
+function stopPreview(){
+  previewPlaying = false;
+  cancelAnimationFrame(previewRaf);
+  $id('previewPlay').textContent = '▶ Play';
+}
+
+function closePreview(){
+  if (!$id('previewModal') || !$id('previewModal').classList.contains('open')) return;
+  stopPreview();
+  $id('previewModal').classList.remove('open');
+  applyAnimations(timeline.frame);
+  renderScene();
+  updateStatus();
+}
+
+function bindPreview(){
+  $id('previewPlay').addEventListener('click', () => {
+    if (previewPlaying) stopPreview(); else startPreview();
+  });
+  $id('previewRestart').addEventListener('click', () => {
+    stopPreview();
+    renderPreviewFrame(0);
+    startPreview();
+  });
+  $id('previewLoop').addEventListener('change', () => {
+    stopPreview();
+    startPreview();
+  });
+  $$('[data-close="previewModal"]').forEach(btn => btn.addEventListener('click', closePreview));
+  $id('previewModal').addEventListener('pointerdown', e => {
+    if (e.target === $id('previewModal')) closePreview();
+  });
+}
+
+/* ------------------------------------------------------------------ */
+/*  Command palette                                                   */
+/* ------------------------------------------------------------------ */
+function commandList(){
+  return [
+    { label:'New empty project', hint:'Clear the canvas', shortcut:'', run:newProject },
+    { label:'Load sample scene', hint:'Neon Orbit demo', shortcut:'', run:loadSample },
+    { label:'Save project JSON', hint:'Download a .json project', shortcut:'Ctrl+S', run:saveProject },
+    { label:'Open project', hint:'Load a .json project', shortcut:'', run:()=>$id('projectInput').click() },
+    { label:'Import image / PSD / AI', hint:'Place a file on the artboard', shortcut:'', run:()=>$id('fileInput').click() },
+    { label:'Export…', hint:'SVG, PNG, WebP, sprite sheet, video', shortcut:'', run:openExportModal },
+    { label:'Preview animation', hint:'Full-screen playback', shortcut:'', run:openPreview },
+    { label:'Open documentation', hint:'Guides and shortcuts', shortcut:'', run:openDocs },
+    { label:'Play / pause', hint:'Toggle timeline playback', shortcut:'Space', run:playToggle },
+    { label:'Add keyframe at playhead', hint:'Capture the selected object', shortcut:'', run:addKeyframeAtPlayhead },
+    { label:'Select all objects', hint:'', shortcut:'Ctrl+A', run:selectAll },
+    { label:'Duplicate selection', hint:'', shortcut:'Ctrl+D', run:duplicateSelected },
+    { label:'Delete selection', hint:'', shortcut:'Del', run:deleteSelected },
+    { label:'Copy selection', hint:'', shortcut:'Ctrl+C', run:copySelection },
+    { label:'Paste', hint:'', shortcut:'Ctrl+V', run:pasteClipboard },
+    { label:'Bring forward', hint:'One layer up', shortcut:']', run:()=>moveLayer(1,false) },
+    { label:'Send backward', hint:'One layer down', shortcut:'[', run:()=>moveLayer(-1,false) },
+    { label:'Bring to front', hint:'', shortcut:'', run:()=>moveSelectionToEnd(true) },
+    { label:'Send to back', hint:'', shortcut:'', run:()=>moveSelectionToEnd(false) },
+    { label:'Align left', hint:'Multi-select', shortcut:'', run:()=>alignSelection('left') },
+    { label:'Align horizontal center', hint:'Multi-select', shortcut:'', run:()=>alignSelection('hcenter') },
+    { label:'Align right', hint:'Multi-select', shortcut:'', run:()=>alignSelection('right') },
+    { label:'Align top', hint:'Multi-select', shortcut:'', run:()=>alignSelection('top') },
+    { label:'Align vertical middle', hint:'Multi-select', shortcut:'', run:()=>alignSelection('vcenter') },
+    { label:'Align bottom', hint:'Multi-select', shortcut:'', run:()=>alignSelection('bottom') },
+    { label:'Distribute horizontally', hint:'Three or more objects', shortcut:'', run:()=>distributeSelection('h') },
+    { label:'Distribute vertically', hint:'Three or more objects', shortcut:'', run:()=>distributeSelection('v') },
+    { label:'Copy motion', hint:'From the selected object', shortcut:'', run:copyMotion },
+    { label:'Paste motion', hint:'Onto the selected object', shortcut:'', run:pasteMotion },
+    { label:'Reverse motion', hint:'Flip keyframe timing', shortcut:'', run:reverseMotion },
+    { label:'Toggle grid', hint:'Artboard grid overlay', shortcut:'G', run:()=>toggleSetting('grid') },
+    { label:'Toggle snapping', hint:'Guides and edge snapping', shortcut:'', run:()=>toggleSetting('snap') },
+    { label:'Toggle onion skin', hint:'Ghost neighbouring keyframes', shortcut:'O', run:()=>toggleSetting('onion') },
+    { label:'Fit artboard', hint:'Zoom to fit', shortcut:'0', run:fitCanvas },
+    { label:'Zoom in', hint:'', shortcut:'+', run:()=>setZoom(zoom*1.15) },
+    { label:'Zoom out', hint:'', shortcut:'-', run:()=>setZoom(zoom/1.15) },
+    { label:'Go to start', hint:'Frame 0', shortcut:'Home', run:()=>seek(0) },
+    { label:'Go to end', hint:'Last frame', shortcut:'End', run:()=>seek(totalFrames()) }
+  ];
+}
+
+function renderPalette(filter){
+  const list = $id('paletteList');
+  list.replaceChildren();
+  const q = (filter || '').trim().toLowerCase();
+  const all = commandList();
+  paletteItems = all.filter(c => !q || c.label.toLowerCase().includes(q) || (c.hint || '').toLowerCase().includes(q));
+  paletteIndex = clamp(paletteIndex, 0, Math.max(0, paletteItems.length - 1));
+  paletteItems.forEach((c, i) => {
+    const b = document.createElement('button');
+    b.className = 'palette-item' + (i === paletteIndex ? ' active' : '');
+    const label = document.createElement('span');
+    label.textContent = c.label;
+    b.appendChild(label);
+    if (c.hint){
+      const h = document.createElement('small');
+      h.textContent = c.hint;
+      b.appendChild(h);
+    }
+    if (c.shortcut){
+      const k = document.createElement('span');
+      k.className = 'kbd';
+      k.textContent = c.shortcut;
+      b.appendChild(k);
+    }
+    b.addEventListener('mouseenter', () => {
+      paletteIndex = i;
+      $$('.palette-item').forEach((el, j) => el.classList.toggle('active', j === i));
+    });
+    b.addEventListener('click', () => runPaletteItem(i));
+    list.appendChild(b);
+  });
+  if (!paletteItems.length){
+    const p = document.createElement('p');
+    p.className = 'hint';
+    p.style.padding = '10px';
+    p.textContent = 'No matching commands.';
+    list.appendChild(p);
+  }
+}
+
+function runPaletteItem(i){
+  const cmd = paletteItems[i];
+  if (!cmd) return;
+  closePalette();
+  setTimeout(cmd.run, 0);
+}
+
+function openPalette(){
+  $id('paletteBackdrop').classList.add('open');
+  $id('paletteInput').value = '';
+  paletteIndex = 0;
+  renderPalette('');
+  setTimeout(() => $id('paletteInput').focus(), 10);
+}
+
+function closePalette(){
+  $id('paletteBackdrop').classList.remove('open');
+}
+
+function bindPalette(){
+  const input = $id('paletteInput');
+  input.addEventListener('input', () => { paletteIndex = 0; renderPalette(input.value); });
+  input.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown'){
+      e.preventDefault();
+      paletteIndex = Math.min(paletteItems.length - 1, paletteIndex + 1);
+      renderPalette(input.value);
+    } else if (e.key === 'ArrowUp'){
+      e.preventDefault();
+      paletteIndex = Math.max(0, paletteIndex - 1);
+      renderPalette(input.value);
+    } else if (e.key === 'Enter'){
+      e.preventDefault();
+      runPaletteItem(paletteIndex);
+    } else if (e.key === 'Escape'){
+      e.preventDefault();
+      closePalette();
+    }
+  });
+  $id('paletteBackdrop').addEventListener('pointerdown', e => {
+    if (e.target === $id('paletteBackdrop')) closePalette();
+  });
+}
+
+/* ------------------------------------------------------------------ */
+/*  Docs & modals                                                     */
+/* ------------------------------------------------------------------ */
+function openDocs(){
+  $id('docsModal').classList.add('open');
+}
+
+function bindDocs(){
+  $$('#docsNav button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      $$('#docsNav button').forEach(b => b.classList.toggle('active', b === btn));
+      $$('.doc-section').forEach(s => s.classList.toggle('active', s.dataset.doc === btn.dataset.doc));
+    });
+  });
+
+  $$('[data-close]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-close');
+      if (id === 'previewModal') return; // closePreview() handles stopping playback
+      if (id === 'exportModal') exportCancel = true;
+      const modal = $id(id);
+      if (modal) modal.classList.remove('open');
+    });
+  });
+
+  document.querySelectorAll('.modal-backdrop').forEach(m => {
+    m.addEventListener('pointerdown', e => {
+      if (e.target !== m) return;
+      if (m.id === 'previewModal') return; // closePreview() handles stopping playback
+      if (m.id === 'exportModal') exportCancel = true;
+      m.classList.remove('open');
+    });
+  });
+
+  $id('expFormat').addEventListener('change', updateExportUI);
+  $id('expStart').addEventListener('click', runExport);
+  $id('expCancel').addEventListener('click', () => {
+    if ($id('expCancel').textContent === 'Cancel'){
+      exportCancel = true;
+      $id('expStatus').textContent = 'Cancelling…';
+    } else {
+      $id('exportModal').classList.remove('open');
+    }
+  });
+}
+
+/* ------------------------------------------------------------------ */
+/*  Keyboard                                                          */
+/* ------------------------------------------------------------------ */
+function isEditing(){
+  const a = document.activeElement;
+  return a && (a.tagName === 'INPUT' || a.tagName === 'SELECT' || a.tagName === 'TEXTAREA' || a.isContentEditable);
+}
+
+function bindKeys(){
+  window.addEventListener('keydown', e => {
+    if ($id('paletteBackdrop').classList.contains('open')){
+      if (e.key === 'Escape') closePalette();
+      return;
+    }
+
+    if (e.key === 'Escape'){
+      const openModals = document.querySelectorAll('.modal-backdrop.open');
+      if (openModals.length){
+        if ($id('previewModal').classList.contains('open')) closePreview();
+        if ($id('exportModal').classList.contains('open')) exportCancel = true;
+        openModals.forEach(m => m.classList.remove('open'));
+        return;
+      }
+      setSelection([]);
+      return;
+    }
+
+    if (isEditing()) return;
+
+    const k = e.key.toLowerCase();
+    const ctrl = e.ctrlKey || e.metaKey;
+
+    if (ctrl && k === 'k'){ e.preventDefault(); openPalette(); return; }
+    if (ctrl && k === 'z' && !e.shiftKey){ e.preventDefault(); undo(); return; }
+    if (ctrl && (k === 'y' || (k === 'z' && e.shiftKey))){ e.preventDefault(); redo(); return; }
+    if (ctrl && k === 's'){ e.preventDefault(); saveProject(); return; }
+    if (ctrl && k === 'd'){ e.preventDefault(); duplicateSelected(); return; }
+    if (ctrl && k === 'a'){ e.preventDefault(); selectAll(); return; }
+    if (ctrl && k === 'c'){ e.preventDefault(); copySelection(); return; }
+    if (ctrl && k === 'x'){ e.preventDefault(); copySelection(); deleteSelected(); return; }
+    if (ctrl && k === 'v'){ e.preventDefault(); pasteClipboard(); return; }
+
+    if (k === 'v') setTool('select');
+    else if (k === 'r') setTool('rect');
+    else if (k === 'e') setTool('ellipse');
+    else if (k === 'l') setTool('line');
+    else if (k === 's') setTool('star');
+    else if (k === 'p') setTool('polygon');
+    else if (k === 't') setTool('text');
+    else if (k === 'b') setTool('brush');
+    else if (k === 'x') setTool('eraser');
+    else if (k === 'h') setTool('hand');
+    else if (k === 'g') toggleSetting('grid');
+    else if (k === 'o') toggleSetting('onion');
+    else if (e.key === '0'){ e.preventDefault(); fitCanvas(); }
+    else if (e.key === '+' || e.key === '='){ e.preventDefault(); setZoom(zoom * 1.15); }
+    else if (e.key === '-' || e.key === '_'){ e.preventDefault(); setZoom(zoom / 1.15); }
+    else if (e.key === ' '){ e.preventDefault(); playToggle(); }
+    else if (e.key === 'Delete' || e.key === 'Backspace'){ e.preventDefault(); deleteSelected(); }
+    else if (e.key === ','){ e.preventDefault(); seek(timeline.frame - 1); }
+    else if (e.key === '.'){ e.preventDefault(); seek(timeline.frame + 1); }
+    else if (e.key === 'Home'){ e.preventDefault(); seek(0); }
+    else if (e.key === 'End'){ e.preventDefault(); seek(totalFrames()); }
+    else if (e.key === '['){ e.preventDefault(); moveLayer(-1, false); }
+    else if (e.key === ']'){ e.preventDefault(); moveLayer(1, false); }
+    else if (['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)){
+      e.preventDefault();
+      const d = e.shiftKey ? 10 : 1;
+      nudgeSelection(e.key === 'ArrowLeft' ? -d : e.key === 'ArrowRight' ? d : 0,
+        e.key === 'ArrowUp' ? -d : e.key === 'ArrowDown' ? d : 0);
+    }
+  });
+}
+
+/* ------------------------------------------------------------------ */
+/*  Init                                                              */
+/* ------------------------------------------------------------------ */
+function init(){
+  bindTools();
+  bindTop();
+  bindInspector();
+  bindTimeline();
+  bindStage();
+  bindKeys();
+  bindDocs();
+  bindPalette();
+  bindPreview();
+
+  $id('docName').value = docName;
+  $id('tlDuration').value = timeline.duration;
+  $id('motionDuration').value = timeline.duration;
+  $id('tlFps').value = String(timeline.fps);
+  $id('motionFps').value = String(timeline.fps);
+  $id('tlLoopMode').value = timeline.loop;
+  $id('tlZoom').value = String(pxPerFrame);
+
+  setTool('select');
+  applyCanvasSize();
+  syncSettingsUI();
+  renderAll();
+
+  try {
+    if (localStorage.getItem('vecta-motion-pro.notice') === 'dismissed') $id('notice').style.display = 'none';
+  } catch (err){}
+
+  let restored = false;
+  try {
+    const raw = localStorage.getItem(AUTOSAVE_KEY);
+    if (raw){
+      applyState(raw);
+      restored = true;
+    }
+  } catch (err){ console.warn('Autosave restore failed', err); }
+
+  if (!restored){
+    loadSample();
+  } else {
+    markSaved();
+    toast('Restored your last session from this browser.');
+  }
+
+  requestAnimationFrame(() => { fitCanvas(); drawOverlay(); });
+  setTimeout(() => { fitCanvas(); drawOverlay(); }, 320);
+
+  window.addEventListener('resize', () => drawOverlay());
+  window.addEventListener('beforeunload', () => {
+    try { localStorage.setItem(AUTOSAVE_KEY, serializeState()); } catch (err){}
+  });
+}
+
+init();
+
+})();
+
+</script>
+</body>
+</html>
+
